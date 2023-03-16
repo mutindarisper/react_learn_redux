@@ -112,7 +112,7 @@ const Map = () => {
 const fetchRegion = async() => {
   
   try {   
-    // if(current_geojson.current) map.removeLayer(current_geojson.current)
+    if(current_geojson.current) map.current.removeLayer(current_geojson.current)
     console.log(current_name.current, 'curent name')
     var basin = current_name.current
     console.log(basin, 'basin current')
@@ -133,6 +133,10 @@ const fetchRegion = async() => {
         // pane: 'pane1000'
       })
       current_geojson.current.addTo(map.current)
+      
+      map.current.fitBounds(current_geojson.current.getBounds(), {
+              padding: [50, 50],
+            });
    
     
     
