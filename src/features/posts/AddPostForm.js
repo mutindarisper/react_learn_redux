@@ -24,7 +24,11 @@ const AddPostForm = () => {
     } 
     
     const onContentChanged = e => setContent(e.target.value)
-    const onAuthorChanged = e => setUserId(e.target.value)
+    const onAuthorChanged = e => {
+        const changed_author = e.target.value
+        console.log(changed_author, 'changed author')
+        return setUserId(e.target.value)
+    }
 
 
 
@@ -43,7 +47,7 @@ const onSavePostClicked = () => {
 const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
 
 const userOptions = users.map( user => (
-    <option key={user.id} value={user.id}>
+    <option key={user.id} value={user.name}>
             {user.name}
     </option>
 ))

@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import postsReducer from '../features/posts/postsSlice.js'
 import usersReducer from '../features/users/usersSlice'
+import mapReducer from '../features/map/MapSlice'
 
 export const store = configureStore({
     reducer: {
         posts: postsReducer,
-        users: usersReducer
+        users: usersReducer,
+        mapselections: mapReducer
     }
         
 })

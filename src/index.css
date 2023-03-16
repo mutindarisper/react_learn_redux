@@ -6,7 +6,7 @@
 
 html {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background: #333;
+  background: #757474;
   color: whitesmoke;
 }
 
@@ -66,4 +66,31 @@ form {
   border: none;
   color: whitesmoke;
   font-size: 1rem;
+}
+#map{
+  position: absolute;
+  top: 20vh;
+  left: 5vw;
+  
+  height: 75vh;
+  width: 70vw;
+}
+#regions{
+  position: absolute;
+  top: 12vh;
+  left: 5vw; 
+  width: 300px;
+  height: 40px;
+  border-radius: 30px;
+}
+.region_label{
+
+  position: absolute;
+  top: 8vh;
+  left: 5vw; 
+}
+.charts{
+  position: absolute;
+  top: 22vh;
+  left: 80vw; 
 }
