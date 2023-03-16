@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import axios from 'axios'
 
 import { selectAllRegions } from '../map/MapSlice'
+import LulcBar from './charts/LulcBar';
 
 
 
@@ -16,6 +17,7 @@ const Map = () => {
     const [indicator, setIndicator] = useState('')
     const [sub_indicator, setSubIndicator] = useState('')
     const [year, setYear] = useState('')
+    const [barchartData, setBarchartData] = useState({})
 
     const [aoi, setAoi] = useState({})
    let current_name = useRef(null)
@@ -24,6 +26,30 @@ const Map = () => {
    let map = useRef(null);
    let wmsLayer = useRef(null)
    let styles = useRef(null)
+  let lulcChartData = {
+    labels: ['bare', 'agri'],
+    datasets: [
+      {
+        data: [10, 20],
+
+        backgroundColor: [
+          "#a8a800",
+          "#ccc",
+          "#bd6860",
+          "green",
+          "#fff1d2",
+          "#55ff00",
+          '#4dd7ff',
+          '#d2efff'
+        ],
+        barThickness: 40,
+     
+     
+      },
+    ],
+  }
+ 
+   
   
 
     const mapselections = useSelector(selectAllRegions)
@@ -222,6 +248,60 @@ const fetchWMS = () => {
   }
 
 
+  const getStats = async () => {
+    try {
+     
+      console.log(region, 'region in stats')
+   console.log(year, 'year in stats')
+
+
+      const response = await axios.get(`http://66.42.65.87:8080/geoserver/wfs?request=GetFeature&service=WFS&version=1.0.0&typeName=LULC_STATS:${year}&outputFormat=application/json&CQL_FILTER=Name=%27${region}%27`
+      );
+      console.log(response.data.features[0].properties,'stats response')
+      var obj = response.data.features[0].properties
+      
+      const newObj = Object.fromEntries(Object.entries(obj).filter(([key]) => !key.includes('MAJ_BAS') && !key.includes('Basin_Name') && !key.includes('Name') && !key.includes('0')))
+      console.log(newObj, 'NEW OBJECT')
+
+      var labels = Object.keys(newObj)
+      console.log(labels, 'stats labels')
+      lulcChartData.labels = labels
+     
+    
+      var figures = Object.values(newObj)
+      console.log(figures, 'stats figures')
+      // var converted = figures.map( (item) => item/100)
+      // console.log(converted, 'converted figres')
+      lulcChartData.datasets[0].data = figures
+      
+      console.log(lulcChartData, 'land cover chart data')
+      return setBarchartData(lulcChartData)
+
+      // //for new array
+      // this.stats_array.labels = labels
+      // this.stats_array.data_figures = figures
+
+
+      // //capture bbox
+      // var bbox = response.data.features[0].bbox
+      // console.log(bbox, 'BOUNDING BOX')
+      //  this.western_lon = bbox[0]
+      //  this.northern_lat = bbox[1]
+      //  this.eastern_lon = bbox[2]
+      //  this.southern_lat = bbox[3]
+
+      //  this.resolution = '300'
+     
+   
+      
+    } catch (error) {
+      console.error('an error occured'+error);
+      
+    }
+  }
+  getStats()
+
+
 
 }
 
@@ -294,11 +374,19 @@ const fetchWMS = () => {
 
          <div id='map'> </div>
 
-         <div className='charts'> 
-         {region} 
+         <div className='charts' > 
+         {/* {region} 
          {indicator}
          {sub_indicator}
-         {year}
+         {year} */}
+         {console.log(barchartData, 'bar chart data in chart component')} 
+       
+{
+  wmsLayer.current
+  ?  <LulcBar  data={barchartData}/>
+  : null
+}
+        
          </div>
 
     </div>
