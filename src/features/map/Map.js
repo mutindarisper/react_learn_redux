@@ -13,11 +13,17 @@ import { selectAllRegions } from '../map/MapSlice'
 const Map = () => {
     const dispatch = useDispatch()
     const [region, setRegion] = useState('')
+    const [indicator, setIndicator] = useState('')
+    const [sub_indicator, setSubIndicator] = useState('')
+    const [year, setYear] = useState('')
+
     const [aoi, setAoi] = useState({})
    let current_name = useRef(null)
     let current_geojson = useRef(null)
     let current_response = useRef(null)
    let map = useRef(null);
+   let wmsLayer = useRef(null)
+   let styles = useRef(null)
   
 
     const mapselections = useSelector(selectAllRegions)
@@ -35,6 +41,21 @@ const Map = () => {
     
 
     }
+    const onIndicatorChanged = e => {
+      const changed_indicator = e.target.value
+     return setIndicator(changed_indicator)
+    }
+    const onSubIndicatorChanged = e => {
+      const changed_sub_indicator = e.target.value
+     return setSubIndicator(changed_sub_indicator)
+    }
+    const onYearChanged = e => {
+      const changed_year = e.target.value
+     return setYear(changed_year)
+    }
+
+
+
 
     
    
@@ -45,10 +66,22 @@ const Map = () => {
     </option>
     ))
 
-    const aoiOptions = mapselections.map( selection => (
-      <p key={selection.id}>{selection.aoi}</p>
+    const indicatorOptions = mapselections.map( selection => (
+      <option key={selection.id} value={selection.indicator}>
+      {selection.indicator}
+      </option>
   ))
 
+  const SubindicatorOptions = mapselections.map( selection => (
+    <option key={selection.id} value={selection.sub_indicator}>
+    {selection.sub_indicator}
+    </option>
+))
+const yearOptions = mapselections.map( selection => (
+  <option key={selection.id} value={selection.year}>
+  {selection.year}
+  </option>
+))
 
     
 
@@ -113,6 +146,7 @@ const fetchRegion = async() => {
   
   try {   
     if(current_geojson.current) map.current.removeLayer(current_geojson.current)
+    if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
     console.log(current_name.current, 'curent name')
     var basin = current_name.current
     console.log(basin, 'basin current')
@@ -146,6 +180,51 @@ const fetchRegion = async() => {
   }
 }
 
+const fetchWMS = () => {
+  if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
+  map.current.createPane("pane400").style.zIndex = 300;
+  console.log(year, 'year in fetch')
+
+  if(region === 'Cuvelai'  && sub_indicator === 'Land Cover'){
+    styles.current = 'cuvelai_lulc'
+
+  }
+  if(region === 'Limpopo'  && sub_indicator === 'Land Cover'){
+    styles.current = 'limpopo_lulc'
+
+  }
+  if(region === 'Okavango'  && sub_indicator === 'Land Cover'){
+    styles.current = 'okavango_lulc'
+
+  }
+  if(region === 'Zambezi'  && sub_indicator === 'Land Cover'){
+    styles.current = 'zambezi_lulc'
+
+  }
+
+  if(sub_indicator === 'Land Cover') {
+    wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/LULC/wms?", {
+      pane: 'pane400',
+      layers: `LULC:${year}`,
+      crs:L.CRS.EPSG4326,
+      styles: styles.current,
+      format: 'image/png',
+      transparent: true,
+      opacity:1.0
+      
+      
+     
+ });
+ 
+ 
+ wmsLayer.current.addTo(map.current);
+
+  }
+
+
+
+}
+
  
      
 
@@ -176,11 +255,51 @@ const fetchRegion = async() => {
 
                     </select>
 
+                    <label htmlFor='indicator' className='indicator_label'>Select Indicator</label>
+                    <select id='indicator' 
+                    value={indicator}
+                    onChange={onIndicatorChanged }
+                    >
+
+                        <option value=''></option>
+                        {indicatorOptions}
+
+                    </select>
+
+                    <label htmlFor='sub_indicator' className='sub_indicator_label'>Select Sub-Indicator</label>
+                    <select id='sub_indicator' 
+                    value={sub_indicator}
+                    onChange={onSubIndicatorChanged }
+                    >
+
+                        <option value=''></option>
+                        {SubindicatorOptions}
+
+                    </select>
+
+                    <label htmlFor='year_label' className='year'>Select Year</label>
+                    <select id='year' 
+                    value={year}
+                    onChange={onYearChanged }
+                    >
+
+                        <option value=''></option>
+                        {yearOptions}
+
+                    </select>
+
+                    <button className='fetch' onClick={fetchWMS}>Fetch</button>
+
         </div>
 
          <div id='map'> </div>
 
-         <div className='charts'> {region} </div>
+         <div className='charts'> 
+         {region} 
+         {indicator}
+         {sub_indicator}
+         {year}
+         </div>
 
     </div>
    

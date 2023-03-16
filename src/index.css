@@ -79,7 +79,7 @@ form {
   position: absolute;
   top: 12vh;
   left: 5vw; 
-  width: 300px;
+  width: 200px;
   height: 40px;
   border-radius: 30px;
 }
@@ -93,4 +93,58 @@ form {
   position: absolute;
   top: 22vh;
   left: 80vw; 
+}
+
+#indicator{
+  position: absolute;
+  top: 12vh;
+  left: 17vw; 
+  width: 200px;
+  height: 40px;
+  border-radius: 30px;
+}
+.indicator_label{
+
+  position: absolute;
+  top: 8vh;
+  left: 17vw; 
+}
+
+#sub_indicator{
+  position: absolute;
+  top: 12vh;
+  left: 30vw; 
+  width: 230px;
+  height: 40px;
+  border-radius: 30px;
+}
+.sub_indicator_label{
+
+  position: absolute;
+  top: 8vh;
+  left: 30vw; 
+}
+#year{
+  position: absolute;
+  top: 12vh;
+  left: 45vw; 
+  width: 180px;
+  height: 40px;
+  border-radius: 30px;
+}
+.year{
+
+  position: absolute;
+  top: 8vh;
+  left: 45vw; 
+}
+.fetch{
+
+  position: absolute;
+  top: 12vh;
+  left: 58vw;
+  width: 180px;
+  height: 40px;
+  border-radius: 30px;
+  border: none;
 }

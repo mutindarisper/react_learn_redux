@@ -9,25 +9,37 @@ const initialState = [
     {
         id:'1',
         name: 'Okavango',
-        aoi: ''
+        aoi: '',
+        indicator: 'Exposure',
+        sub_indicator: 'Land Cover',
+        year: '2010'
    
     },
     {
         id:'2',
         name: 'Cuvelai',
-        aoi: ''
+        aoi: '',
+        indicator: 'Resiliance',
+        sub_indicator: 'Vegetation Cover',
+        year: '2011'
 
     },
     {
         id:'3',
         name: 'Zambezi',
-        aoi: ''
+        aoi: '',
+        indicator: 'Sensitivity',
+        sub_indicator: 'Wetland Inventory',
+        year: '2012'
    
     },
     {
         id:'4',
         name: 'Limpopo',
-        aoi: ''
+        aoi: '',
+        indicator: 'Expose',
+        sub_indicator: 'Land Cover',
+        year: '2013'
         
     }
    
