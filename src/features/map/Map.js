@@ -8,6 +8,12 @@ import axios from 'axios'
 
 import { selectAllRegions } from '../map/MapSlice'
 import LulcBar from './charts/LulcBar';
+import shp from "shpjs/dist/shp.js"
+
+// import "../map/upload_shp/catiline.js"
+import "../map/upload_shp/leaflet.shpfile.js"
+// import "../map/upload_shp/shp.js"
+// import "../map/upload_shp/gh-pages.css"
 
 
 
@@ -26,6 +32,9 @@ const Map = () => {
    let map = useRef(null);
    let wmsLayer = useRef(null)
    let styles = useRef(null)
+
+
+  //  window.shp = true
   let lulcChartData = {
     labels: ['bare', 'agri'],
     datasets: [
@@ -163,6 +172,54 @@ const yearOptions = mapselections.map( selection => (
         }); // add the basemaps to the controls
     
         L.control.layers(baseMaps).addTo(map.current);
+
+        // var shpfile = new L.Shapefile('River.zip', {})
+        // shpfile.addTo(map.current)
+
+        // shpfile.once("data:loaded", function() {
+        //   alert("shapefile is loaded")
+        // })
+
+        // const shapeFileLayer = L.shapefile('River.zip', {});
+
+
+
+        document.getElementById("submit").onclick = function(e){
+          var files = document.getElementById('file').files;
+          if (files.length == 0) {
+            return; //do nothing if no file given yet
+          }
+          
+          var file = files[0];
+          
+          if (file.name.slice(-3) != 'zip'){ //Demo only tested for .zip. All others, return.
+            document.getElementById('warning').innerHTML = 'Select .zip file';  	
+            return;
+          } else {
+            document.getElementById('warning').innerHTML = ''; //clear warning message.
+            handleZipFile(file);
+          }
+        };
+        
+        //More info: https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+        function handleZipFile(file){
+          var reader = new FileReader();
+          reader.onload = function(){
+            if (reader.readyState != 2 || reader.error){
+              return;
+            } else {
+              convertToLayer(reader.result);
+            }
+          }
+          reader.readAsArrayBuffer(file);
+        }
+        
+        function convertToLayer(buffer){
+          shp(buffer).then(function(geojson){	//More info: https://github.com/calvinmetcalf/shapefile-js
+            var layer = L.shapefile(geojson).addTo(map.current);//More info: https://github.com/calvinmetcalf/leaflet.shapefile
+            console.log(layer);
+          });
+        }
     
       
       } 
@@ -373,6 +430,10 @@ const fetchWMS = () => {
         </div>
 
          <div id='map'> </div>
+
+         <label className='upload' htmlFor="input">Select a zipped shapefile:</label>
+          <input type="file" id="file" /> 
+<input type="submit" id="submit" /> <span id="warning"></span>
 
          <div className='charts' > 
          {/* {region} 

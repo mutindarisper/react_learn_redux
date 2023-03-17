@@ -12,7 +12,7 @@ html {
 
 body {
   min-height: 100vh;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   padding: 0 10% 10%;
 }
 
@@ -150,4 +150,19 @@ form {
   height: 40px;
   border-radius: 30px;
   border: none;
+}
+input {
+  margin-top:40px;
+  margin-left: 800px;
+}
+#submit{
+  margin-top:10px;
+  margin-left: 800px;
+
+}
+.upload{
+  position: absolute;
+  margin-top:10px;
+  margin-left: 800px;
+
 }

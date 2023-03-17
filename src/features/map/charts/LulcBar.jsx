@@ -35,20 +35,6 @@ export const options = {
     },
   };
 
-//   const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-// export const data = {
-//   labels:[],
-//   datasets: [
-//     {
-//     //   label: 'Dataset 1',
-//     //   data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-//     data: [],
-//       backgroundColor: [],
-//     },
-    
-//   ],
-// };
 
 
 
