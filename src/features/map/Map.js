@@ -14,6 +14,28 @@ import shp from "shpjs/dist/shp.js"
 import "../map/upload_shp/leaflet.shpfile.js"
 // import "../map/upload_shp/shp.js"
 // import "../map/upload_shp/gh-pages.css"
+import "turf/dist/turf.min.js"
+import * as turf from '@turf/turf'
+
+import area from "@turf/area"
+import bbox from "@turf/bbox"
+// import { point }   from '@turf/turf';
+// import turf from "turf/dist/turf.js"
+// import turf from "https://unpkg.com/@turf/turf@6.5.0/turf.min.js"
+// import  points from '@turf/turf';
+// import { point } from '@turf/turf';
+import {Icon} from 'leaflet'
+
+delete Icon.Default.prototype._getIconUrl;
+// Icon.options.shadowSize = [0,0];
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('../map/assets/marker.svg'),
+  iconUrl: require('../map/assets/marker.svg'),
+  shadowUrl: require('../map/assets/marker.svg'),
+  shadowSize: [0,0]
+});
+
+
 
 
 
@@ -32,6 +54,9 @@ const Map = () => {
    let map = useRef(null);
    let wmsLayer = useRef(null)
    let styles = useRef(null)
+
+   let shp_geojson = useRef(null)
+   let marker = useRef(null)
 
 
   //  window.shp = true
@@ -173,14 +198,83 @@ const yearOptions = mapselections.map( selection => (
     
         L.control.layers(baseMaps).addTo(map.current);
 
-        // var shpfile = new L.Shapefile('River.zip', {})
-        // shpfile.addTo(map.current)
+        var poinnt = turf.multiPoint([[15.779725953412578, -18.006133866085932],
+          [15.879725953412578, -18.106133866085932],
+          [15.899725953412578, -18.156133866085932]])
 
-        // shpfile.once("data:loaded", function() {
-        //   alert("shapefile is loaded")
-        // })
+         
 
-        // const shapeFileLayer = L.shapefile('River.zip', {});
+          
+          var greenIcon = L.icon({
+            iconUrl: '../map/assets/marker.svg',
+            // shadowUrl: 'leaf-shadow.png',
+        
+            iconSize:     [38, 95], // size of the icon
+            shadowSize:   [50, 64], // size of the shadow
+            iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var turf_help = turf.helpers
+        var pointt = turf.point([-75.343, 39.984]);
+        console.log(pointt.geometry.coordinates, 'pointt')
+
+
+
+          // L.geoJSON(pointt).addTo(map.current)
+          // L.marker(pointt.geometry.coordinates, {icon: greenIcon}).addTo(map.current);
+
+
+
+          var linestring1 = turf.lineString([[15.83,-19.53], 
+            [18.20,-17.68], [18.30,-17.88],
+             [18.40,-17.98]],
+             [14.90, 14.88], {name: 'line 1'});
+          // L.geoJSON(linestring1).addTo(map.current)
+
+
+          var points = turf.randomPoint(25, {bbox: [15.839969635009767,-19.53411293029785,18.20037460327154,-17.68951606750488]})
+          L.geoJSON(points).addTo(map.current)
+          
+          // var points_coords = points.features.slice(0, 10).map( (item) => item.geometry.coordinates)
+
+          // console.log(points_coords[0], 'random coordinates')
+
+          // L.marker(points_coords[0], {icon: greenIcon}).addTo(map.current); works for just one
+          
+
+
+          Object.entries(points.features).forEach( ([key, value]) => {
+            if(key) {
+
+
+             marker.current =  L.circleMarker([value.geometry.coordinates[1], value.geometry.coordinates[0]], {icon:greenIcon})
+            //  marker.current.addTo(map.current)
+
+        return `${key}`
+
+            }
+
+          })
+
+       
+
+
+
+
+//           var locationA = turf.point([-75.343, 39.984], {name: 'Location A'});
+// var locationB = turf.point([-75.833, 39.284], {name: 'Location B'});
+// var locationC = turf.point([-75.534, 39.123], {name: 'Location C'});
+
+// var collection = turf.featureCollection([
+//   locationA,
+//   locationB,
+//   locationC
+// ]);
+
+// L.geoJSON(collection).addTo(map.current)
+
 
 
 
@@ -216,9 +310,76 @@ const yearOptions = mapselections.map( selection => (
         
         function convertToLayer(buffer){
           shp(buffer).then(function(geojson){	//More info: https://github.com/calvinmetcalf/shapefile-js
-            var layer = L.shapefile(geojson).addTo(map.current);//More info: https://github.com/calvinmetcalf/leaflet.shapefile
+            console.log(geojson.features[0].geometry.coordinates[0], 'uploaded geojson')
+            shp_geojson.current = geojson
+            var layer = L.shapefile(geojson, {
+              style: {
+                color: "#ff0000",
+                opacity: 1,
+                fillOpacity:0,
+                weight: 4
+              },
+
+              onEachFeature: function (feature, layer) {
+                console.log(feature, 'uploaded shapefile feature')
+                var computed_area =  (area(feature)/1000000).toFixed(2)
+                var bounding_box = bbox(feature).toString()
+
+             
+                layer.bindPopup(`<b> Area: </b> ${computed_area}
+                <br>
+                <b> Bbox: </b> ${bounding_box}`)
+               console.log(bounding_box, 'turf bbox')
+
+              }
+            })
+            .addTo(map.current);//More info: https://github.com/calvinmetcalf/leaflet.shapefile
             console.log(layer);
+
+          //check the difference
+
+          var polygon = turf.polygon([[[12.839969635009767,-19.53411293029785], [18.20037460327154,-17.68951606750488],
+            [17.20037460327154,-18.68951606750488], [12.839969635009767,-19.53411293029785]]]);
+         L.geoJSON(polygon, {
+           style: {
+             color: "magenta",
+             opacity: 1,
+             fillOpacity:0,
+             weight: 4
+           }
+         }).addTo(map.current)
+         
+          var difference = turf.intersect(polygon, layer)
+          
+         var diffGeojson = L.geoJSON(difference).addTo(map.current)
+
+         map.current.fitBounds(diffGeojson.getBounds(), {
+          padding: [50, 50],
+        });
+
+         
+
+          //  var converted_geojson =  L.geoJSON( shp_geojson.current, {
+          //     style: {
+          //       color: "magenta",
+          //       opacity: 1,
+          //       fillOpacity:0,
+          //       weight: 4
+          //     },
+          //   //    onEachFeature: function (feature, layer) {
+          //   //     // console.log(feature, 'uploaded shapefile feature')
+          //   //  var computed_area =  area(feature)
+          //   //    console.log(computed_area, 'turf area')
+
+          //   //   }
+          //     // pane: 'pane1000'
+          //   })
+          //   converted_geojson.addTo(map.current)
+
           });
+
+          
+
         }
     
       

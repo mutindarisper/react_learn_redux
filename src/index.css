@@ -151,12 +151,14 @@ form {
   border-radius: 30px;
   border: none;
 }
-input {
+#file {
+  position: absolute;
   margin-top:40px;
   margin-left: 800px;
 }
 #submit{
-  margin-top:10px;
+  position: absolute;
+  margin-top:90px;
   margin-left: 800px;
 
 }
@@ -165,4 +167,7 @@ input {
   margin-top:10px;
   margin-left: 800px;
 
+}
+.leaflet-marker-icon{
+  display: none !important;
 }

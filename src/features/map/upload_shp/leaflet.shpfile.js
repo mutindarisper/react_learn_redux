@@ -1,4 +1,7 @@
 'use strict';
+import "leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 /* global cw, shp */
 L.Shapefile = L.GeoJSON.extend({
