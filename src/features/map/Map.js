@@ -25,6 +25,7 @@ import bbox from "@turf/bbox"
 // import  points from '@turf/turf';
 // import { point } from '@turf/turf';
 import {Icon} from 'leaflet'
+import * as wkt from 'wkt'
 
 delete Icon.Default.prototype._getIconUrl;
 // Icon.options.shadowSize = [0,0];
@@ -57,6 +58,7 @@ const Map = () => {
 
    let shp_geojson = useRef(null)
    let marker = useRef(null)
+   let bboxx = useRef(null)
 
 
   //  window.shp = true
@@ -190,7 +192,7 @@ const yearOptions = mapselections.map( selection => (
           center: [-19.004029959874842, 23.989915476106987],
           // minZoom: 6.5,
           // maxZoom: 20,
-          zoom: 5,
+          zoom: 5.5,
           measureControl: true,
           // defaultExtentControl: true,
           layers: [mapboxSatellite]
@@ -260,8 +262,82 @@ const yearOptions = mapselections.map( selection => (
 
        
 
+   
+          var poly1 = turf.polygon([[
+            [20.369239807128963, -15.93078994750971],
+          
+          
+            [15.640975952148438, -19.474559783935547],
+               
+             
+                [17.598272323608455, -19.440942764282227],
+             
+             
+                [17.580978393554744, -19.46551322937006],
+               
+               
+                [17.50320816040039, -19.418428421020508],
+             
+             
+                [17.511526107788146, -19.408964157104435],
+                [20.369239807128963, -15.93078994750971]
+          ]]);
+          
+          var poly2 = turf.polygon([[
+            [20.369239807128963, -15.93078994750971],
+            [17.369239807128963, -14.93078994750971],
+            [18.370422363281364, -17.930301666259766],
+  
+            [19.398820877075195, -17.918651580810547],
+           
+           [20.410255432128963, -17.913959503173828],
+           [20.369239807128963, -15.93078994750971]
+                    
+           
+          ]]);
+  
+          L.geoJSON(poly1,  {
+            style: {
+              color: "blue",
+              opacity: 1,
+              fillOpacity:0,
+              weight: 4
+            }
+          })
+          // .addTo(map.current)
+          L.geoJSON(poly2 ,  {
+            style: {
+              color: "red",
+              opacity: 1,
+              fillOpacity:0,
+              weight: 4
+            }
+          })
+          // .addTo(map.current)
+          
+          var intersection = turf.union(poly1, poly2);
+          var intersect_geo = L.geoJSON(intersection,  {
+            style: {
+              color: "yellow",
+              opacity: 1,
+              fillOpacity:0.5,
+              weight: 4
+            }
+          })
+          // intersect_geo.addTo(map.current)
 
+          var difference = turf.difference(poly1, poly2);
+          var diff_geo = L.geoJSON(difference,  {
+            style: {
+              color: "teal",
+              opacity: 1,
+              fillOpacity:0.5,
+              weight: 4
+            }
+          })
+          // diff_geo.addTo(map.current)
 
+       
 
 //           var locationA = turf.point([-75.343, 39.984], {name: 'Location A'});
 // var locationB = turf.point([-75.833, 39.284], {name: 'Location B'});
@@ -324,6 +400,7 @@ const yearOptions = mapselections.map( selection => (
                 console.log(feature, 'uploaded shapefile feature')
                 var computed_area =  (area(feature)/1000000).toFixed(2)
                 var bounding_box = bbox(feature).toString()
+                bboxx.current = bounding_box
 
              
                 layer.bindPopup(`<b> Area: </b> ${computed_area}
@@ -347,7 +424,37 @@ const yearOptions = mapselections.map( selection => (
              fillOpacity:0,
              weight: 4
            }
-         }).addTo(map.current)
+         })
+        //  .addTo(map.current)
+
+            // clip by bbox
+            var bboxing = [15.8,-19.5,18.2,-17.6]
+
+            // var bboxx = [0, 0, 10, 10];
+            // var poly = turf.polygon([[[2, 2], [8, 4], [12, 8], [3, 7], [2, 2]]]);
+            console.log(bboxx.current, 'current bbox')
+            // var polyy = current_response.current.features[0].geometry.coordinates
+
+            var new_polly = turf.polygon([ [[13.949995, -17.432521], [18.347457, -17.608717], [18.255073, -21.198009], [15.040122, -21.919735], [13.949995, -17.432521] ] ] )
+             var new_polly_geo = L.geoJSON(new_polly)
+              // new_polly_geo.addTo(map.current)
+
+
+
+            var clipped = turf.bboxClip(new_polly, bboxing)
+  
+  
+  
+        var clip_geo =  L.geoJSON(clipped,  {
+              style: {
+                color: "orange",
+                opacity: 1,
+                fillOpacity:0.5,
+                weight: 4
+              }
+            })
+            // clip_geo.addTo(map.current)
+  
          
           var difference = turf.intersect(polygon, layer)
           
@@ -356,7 +463,9 @@ const yearOptions = mapselections.map( selection => (
          map.current.fitBounds(diffGeojson.getBounds(), {
           padding: [50, 50],
         });
+     
 
+     
          
 
           //  var converted_geojson =  L.geoJSON( shp_geojson.current, {
@@ -400,6 +509,8 @@ const fetchRegion = async() => {
     console.log(aoi_data, 'aoi response')
     current_response.current = aoi_data
     console.log(current_response.current, 'current aoi')
+
+    console.log(current_response.current.features[0].geometry.coordinates, 'multipolygon')
        // map.createPane("pane1000").style.zIndex = 300;
        current_geojson.current = L.geoJSON(current_response.current, {
         style: {
@@ -459,11 +570,102 @@ const fetchWMS = () => {
       
      
  });
- 
- 
+
  wmsLayer.current.addTo(map.current);
 
   }
+
+
+
+  if(sub_indicator === 'Vegetation Cover') {
+
+    const instanceID = "cf1096bb-15f1-4674-bc55-5e5d8fcec549"
+  const firstDate = "2022-05-31";
+  const lastDate = "2022-12-31";
+  // const geometry = "MULTIPOLYGON (((16.3419, -15.1163, 16.6067,-15.2167, 17.9791,-18.1524, 19.3665,-18.9237, 15.237,-19.5444, 15.1447,-19.4983, 16.3419,-15.1163), (14.9678,-19.4888, 14.9585,-19.4888, 14.9587,-19.4796, 13.957,-18.1482, 14.9678,-19.4888), (14.8923, -17.2617, 14.9016 ,-17.2617, 14.9108, -17.2617, 14.92,-17.2617, 16.211, -15.3261 ,16.2202,-15.3261, 14.8923, -17.2617)))"
+  // let geom = current_response.current.features[0].geometry.coordinates
+//   var stringified = JSON.stringify(geom)
+//   // console.log( ` "MULTIPOLYGON ${stringified}"`, 'stringified multipolygon')
+
+//   let str_geom = ` "MULTIPOLYGON ${stringified}"`
+//   console.log('str geom', str_geom)
+  
+//   str_geom = str_geom.replace(/[\[]/g, '(').replace(/[\]]/g, ')')
+// console.log('formated geom', str_geom)
+
+//second trial
+// let geom = current_response.current.features[0].geometry
+// console.log(geom, 'geometry')
+// var geom_str = wkt.stringify(geom)
+// console.log('wkt stringified', geom_str)
+
+
+
+// let smaller_geom =  shp_geojson.current.features[0].geometry
+// console.log('smaller geom',smaller_geom)
+// var geom_str = wkt.stringify(smaller_geom)
+// console.log('str small geom',geom_str)
+
+//third trial, even a smaller polygon
+var geometry = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              15.217331760838846,
+              -17.722800942446668
+            ],
+            [
+              15.217331760838846,
+              -17.925796489243638
+            ],
+            [
+              15.473208790590633,
+              -17.925796489243638
+            ],
+            [
+              15.473208790590633,
+              -17.722800942446668
+            ],
+            [
+              15.217331760838846,
+              -17.722800942446668
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+  ]
+}
+let smaller_geom =  geometry.features[0].geometry
+var geom_str = wkt.stringify(smaller_geom)
+console.log('str small geom',geom_str)
+
+  const wmsUrl = `https://services.sentinel-hub.com/ogc/wms/${instanceID}`
+  
+  var wmsOptions = {
+    pane: 'pane400',
+    tileSize: 512,
+    maxcc: 50,
+    layers: "NDVI",
+    transparent: "true",
+    format: "image/png",
+    time: `${firstDate}/${lastDate}`,
+    geometry: geom_str, //works with a small area, max characters in a https request is 2048
+    crs: L.CRS.EPSG4326,
+  }
+  //https://gis3.nve.no/map/services/Nettanlegg1/MapServer/WmsServer?request=GetCapabilities&service=WMS
+  wmsLayer.current = L.tileLayer.wms(wmsUrl, wmsOptions);
+
+
+  wmsLayer.current.addTo(map.current)
+   }
 
 
   const getStats = async () => {
