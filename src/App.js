@@ -3,9 +3,12 @@ import AddPostForm from "./features/posts/AddPostForm";
 import Map from "./features/map/Map";
 import { configureStore } from "@reduxjs/toolkit";
 import mapReducer from './features/map/MapSlice'
+import { Routes, Route } from 'react-router-dom'
 
 import {  useDispatch, useSelector } from 'react-redux';
 import { selectAllRegions } from './features/map/MapSlice'
+import Home from "./components/Home";
+import About from "./components/About";
 
 function App() {
 // const reducer = mapReducer()
@@ -27,17 +30,25 @@ const selected_region= mapselections.map( selection => (
 
 
   return (
-    <main className="App">
+    <Routes>
+      <Route path="/" element={<Home />}></Route>
+      <Route path="about" element={<About />}></Route>
+      <Route path="dashboard" element={ <div className="App"> <Map /></div>}></Route>
+      {/* <main className="App"> */}
          {/* <AddPostForm />
      <PostsList /> */}
      {/* {region_name} */}
 
      {/* {selected_region} */}
     
-     <Map />
+     {/* <Map /> */}
      
   
-    </main>
+    {/* </main> */}
+
+      
+    </Routes>
+    
   );
 }
 

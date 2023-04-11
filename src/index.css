@@ -74,6 +74,7 @@ form {
   
   height: 75vh;
   width: 70vw;
+  z-index: 300 !important;
 }
 #regions{
   position: absolute;
@@ -154,20 +155,28 @@ form {
 #file {
   position: absolute;
   margin-top:40px;
-  margin-left: 800px;
+  margin-left: 75vw;
 }
 #submit{
   position: absolute;
   margin-top:90px;
-  margin-left: 800px;
+  margin-left: 75vw;
 
 }
 .upload{
   position: absolute;
   margin-top:10px;
-  margin-left: 800px;
+  margin-left: 75vw;
 
 }
 .leaflet-marker-icon{
   display: none !important;
+}
+.container{
+  position: absolute;
+  top: 50vh;
+  z-index: 500;
+  height: 100px;
+  width: 100px;
+  background-color: #79e0e0;
 }

@@ -26,6 +26,14 @@ import bbox from "@turf/bbox"
 // import { point } from '@turf/turf';
 import {Icon} from 'leaflet'
 import * as wkt from 'wkt'
+import "leaflet-draw/dist/leaflet.draw-src.css";
+import "leaflet-draw";
+
+import "@geoman-io/leaflet-geoman-free"
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css"
+import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"
+
+
 
 delete Icon.Default.prototype._getIconUrl;
 // Icon.options.shadowSize = [0,0];
@@ -59,6 +67,8 @@ const Map = () => {
    let shp_geojson = useRef(null)
    let marker = useRef(null)
    let bboxx = useRef(null)
+   let custom_polygon = useRef()
+   let show_chart = useRef(false)
 
 
   //  window.shp = true
@@ -190,6 +200,7 @@ const yearOptions = mapselections.map( selection => (
           zoomControl: false,
           layersControl: false,
           center: [-19.004029959874842, 23.989915476106987],
+          // drawControl: true,
           // minZoom: 6.5,
           // maxZoom: 20,
           zoom: 5.5,
@@ -199,6 +210,119 @@ const yearOptions = mapselections.map( selection => (
         }); // add the basemaps to the controls
     
         L.control.layers(baseMaps).addTo(map.current);
+
+
+       // Initialise the FeatureGroup to store editable layers
+// var editableLayers = new L.FeatureGroup();
+// map.current.addLayer(editableLayers);
+
+
+
+// var drawPluginOptions = {
+//   position: 'topright',
+//   draw: {
+//     polyline: false,
+//     polygon: {
+//       allowIntersection: false, // Restricts shapes to simple polygons
+//       showArea: true,
+//       drawError: {
+//         color: '#e1e100', // Color the shape will turn when intersects
+//         message: '<strong>Polygon draw does not allow intersections!<strong> (allowIntersection: false)' // Message that will show when intersect
+//       },
+//       shapeOptions: {
+//         color: '#bada55'
+//       }
+//     },
+//     circle: false, // Turns off this drawing tool
+//             rectangle: false,
+//             marker: false,
+//             circlemarker: false,
+//   },
+//   edit: {
+//     featureGroup: editableLayers, //REQUIRED!!
+//     remove: false
+//   }
+// };
+
+
+
+
+
+// // Initialise the draw control and pass it the FeatureGroup of editable layers
+// var drawControl = new L.Control.Draw(drawPluginOptions);
+// map.current.addControl(drawControl);
+
+
+// var editableLayers = new L.FeatureGroup();
+// map.current.addLayer(editableLayers);
+
+
+
+
+// map.current.on(L.Draw.Event.CREATED, (e) => {
+//   var type = e.layerType,
+//     layer = e.layer;
+
+//   if (type === 'marker') {
+//     layer.bindPopup('A popup!');
+//   }
+
+//   editableLayers.addLayer(layer);
+// });
+
+
+// var drawnItems = new L.FeatureGroup();
+// map.current.addLayer(drawnItems);
+
+// var drawControl = new L.Control.Draw();
+// map.current.addControl(drawControl);
+
+// map.current.on('draw:created', function(e) {
+//   var type = e.layerType,
+//     layer = e.layer;
+//   drawnItems.addLayer(layer);
+// });
+
+// map.current.on('draw:editstart', function() {
+//   console.log('edit start');
+// });
+
+// map.current.on('draw:editstop', function() {
+//   console.log('edit stop');
+// });
+
+// add Leaflet-Geoman controls with some options to the map  
+map.current.pm.addControls({  
+  position: 'topright',  
+  drawCircle: false, 
+  drawMarker: false, 
+  drawCircleMarker: false,  
+});
+// enable polygon Draw Mode
+map.current.pm.enableDraw('Polygon', {
+  snappable: true,
+  snapDistance: 20,
+  // getGeomanDrawLayers: true
+});
+
+map.current.on('pm:create', function(e) {
+  var layer = e.layer;
+  var feature = layer.toGeoJSON()
+  console.log('geojsonfeature', feature)
+  custom_polygon.current = feature
+
+  // setPupup(layer);
+  // layer.on('pm:update', function(e) {
+  //   setPupup(e.layer);
+  // });
+});
+
+
+// console.log(fg.toGeoJSON(), 'geoman polygon ');
+
+// disable Draw Mode
+map.current.pm.disableDraw();
+
 
         var poinnt = turf.multiPoint([[15.779725953412578, -18.006133866085932],
           [15.879725953412578, -18.106133866085932],
@@ -537,7 +661,7 @@ const fetchRegion = async() => {
 
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
-  map.current.createPane("pane400").style.zIndex = 300;
+  map.current.createPane("pane400").style.zIndex = 200;
   console.log(year, 'year in fetch')
 
   if(region === 'Cuvelai'  && sub_indicator === 'Land Cover'){
@@ -558,11 +682,22 @@ const fetchWMS = () => {
   }
 
   if(sub_indicator === 'Land Cover') {
+  //   console.log(custom_polygon.current.geometry.coordinates[0], 'custome ')
+  //   var feature=  custom_polygon.current
+  //   var turf_bbox = turf.bbox(feature)
+  //   console.log(turf_bbox, 'turf bbox')
+  //   var str =  wkt.stringify(custom_polygon.current.geometry)
+  //   console.log(str, 'str')
+
+  //  var bounds_ =  map.current.getBounds(custom_polygon.current).toBBoxString()
+  //  console.log(bounds_, 'bounds')
     wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/LULC/wms?", {
       pane: 'pane400',
       layers: `LULC:${year}`,
       crs:L.CRS.EPSG4326,
       styles: styles.current,
+      // bounds: map.current.getBounds(custom_polygon.current).toBBoxString(),
+    
       format: 'image/png',
       transparent: true,
       opacity:1.0
@@ -643,9 +778,9 @@ var geometry = {
     }
   ]
 }
-let smaller_geom =  geometry.features[0].geometry
-var geom_str = wkt.stringify(smaller_geom)
-console.log('str small geom',geom_str)
+// let smaller_geom =  geometry.features[0].geometry
+var geom_str = wkt.stringify(custom_polygon.current.geometry)
+console.log('str custom geom',geom_str)
 
   const wmsUrl = `https://services.sentinel-hub.com/ogc/wms/${instanceID}`
   
@@ -695,6 +830,7 @@ console.log('str small geom',geom_str)
       lulcChartData.datasets[0].data = figures
       
       console.log(lulcChartData, 'land cover chart data')
+      if(barchartData)show_chart.current = true
       return setBarchartData(lulcChartData)
 
       // //for new array
@@ -720,6 +856,9 @@ console.log('str small geom',geom_str)
     }
   }
   getStats()
+
+
+  
 
 
 
@@ -793,6 +932,13 @@ console.log('str small geom',geom_str)
         </div>
 
          <div id='map'> </div>
+         {/* {
+          wmsLayer.current ? <div  className='container'> yes</div> 
+          : ''
+         }
+          */}
+
+
 
          <label className='upload' htmlFor="input">Select a zipped shapefile:</label>
           <input type="file" id="file" /> 
