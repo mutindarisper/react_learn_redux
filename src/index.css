@@ -180,3 +180,15 @@ form {
   width: 100px;
   background-color: #79e0e0;
 }
+.home_icon{
+  position: absolute;
+  top: 20vh;
+  left: 2vw;
+  cursor: pointer;
+}
+.about_icon{
+  position: absolute;
+  top: 24vh;
+  left: 2vw;
+ cursor: pointer;
+}

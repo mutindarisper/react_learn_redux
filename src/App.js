@@ -4,11 +4,14 @@ import Map from "./features/map/Map";
 import { configureStore } from "@reduxjs/toolkit";
 import mapReducer from './features/map/MapSlice'
 import { Routes, Route } from 'react-router-dom'
+import { Link, NavLink, useNavigate} from "react-router-dom"
 
 import {  useDispatch, useSelector } from 'react-redux';
 import { selectAllRegions } from './features/map/MapSlice'
 import Home from "./components/Home";
 import About from "./components/About";
+
+import { IoHome, IoInformationCircle} from "react-icons/io5";
 
 function App() {
 // const reducer = mapReducer()
@@ -28,12 +31,28 @@ const selected_region= mapselections.map( selection => (
 
 ))
 
+const navigate = useNavigate() //navigate programmatically onclick
+
 
   return (
     <Routes>
       <Route path="/" element={<Home />}></Route>
       <Route path="about" element={<About />}></Route>
-      <Route path="dashboard" element={ <div className="App"> <Map /></div>}></Route>
+      <Route path="dashboard" element={ 
+       
+      
+      <div className="App">
+        {/* <NavLink to='/'>   */}
+        <IoHome className="home_icon" onClick={() => navigate('/')}/>
+        {/* <p className="home_icon">Home</p> */}
+        
+         {/* </NavLink> */}
+        
+         <IoInformationCircle height="100" className="about_icon"/>
+
+         <Map />
+         
+         </div>}></Route>
       {/* <main className="App"> */}
          {/* <AddPostForm />
      <PostsList /> */}
