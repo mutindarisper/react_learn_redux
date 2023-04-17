@@ -34,6 +34,9 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css"
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"
 
 
+import { IoCloseCircleSharp} from "react-icons/io5";
+
+
 
 delete Icon.Default.prototype._getIconUrl;
 // Icon.options.shadowSize = [0,0];
@@ -69,6 +72,7 @@ const Map = () => {
    let bboxx = useRef(null)
    let custom_polygon = useRef()
    let show_chart = useRef(false)
+   const [compare, setCompare] = useState(false)
 
 
   //  window.shp = true
@@ -864,7 +868,15 @@ console.log('str custom geom',geom_str)
 
 }
 
- 
+ const show_compare = () => {
+    setCompare(true)
+
+ }
+ const close_compare = () => {
+  setCompare(false)
+
+}
+  
      
 
       useEffect(() => {
@@ -937,6 +949,16 @@ console.log('str custom geom',geom_str)
           : ''
          }
           */}
+
+          <div className='compare' onClick={show_compare}>Compare</div>
+          {
+            compare ? <div className='compare_panel' >Compare Panel
+            <IoCloseCircleSharp className='close_compare' onClick={close_compare} />
+            
+            </div>
+            : null
+          }
+          
 
 
 

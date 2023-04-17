@@ -48,7 +48,7 @@ const navigate = useNavigate() //navigate programmatically onclick
         
          {/* </NavLink> */}
         
-         <IoInformationCircle height="100" className="about_icon"/>
+         <IoInformationCircle height="100" className="about_icon" onClick={() => navigate('about')}/>
 
          <Map />
          
