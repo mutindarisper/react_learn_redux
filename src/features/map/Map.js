@@ -35,6 +35,8 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"
 
 
 import { IoCloseCircleSharp} from "react-icons/io5";
+import { Routes, Route } from 'react-router-dom'
+import { Link, NavLink} from "react-router-dom"
 
 
 
@@ -73,6 +75,8 @@ const Map = () => {
    let custom_polygon = useRef()
    let show_chart = useRef(false)
    const [compare, setCompare] = useState(false)
+   const [metadata, setMetaData] = useState(false)
+   const [stats, setStats] = useState(false)
 
 
   //  window.shp = true
@@ -877,7 +881,16 @@ console.log('str custom geom',geom_str)
 
 }
   
-     
+const show_metadata = () => {
+  setMetaData(true)
+  setStats(false)
+  
+}
+    
+const show_stats = () => {
+  setStats(true)
+  setMetaData(false)
+}
 
       useEffect(() => {
         setLeafletMap()
@@ -972,11 +985,35 @@ console.log('str custom geom',geom_str)
          {sub_indicator}
          {year} */}
          {console.log(barchartData, 'bar chart data in chart component')} 
+
+       
+         
+          
+             <div className='tabs'>
+              {
+                
+              }
+             
+             <div onClick={show_stats} style={{ color: stats === true ? 'steelblue' : '#5c5a5a', borderBottom:  stats === true ? ' 5px solid' : '' }}> Statistics</div> 
+              
+            <div onClick={show_metadata} style={{ color: metadata === true ? 'steelblue' : '#5c5a5a', borderBottom:  metadata === true ? ' 5px solid' : '' }}>MetaData</div>
+           
+            
+            </div>
+
+          
        
 {
-  wmsLayer.current
+  wmsLayer.current && stats
   ?  <LulcBar  data={barchartData}/>
   : null
+}
+
+{
+  metadata ? <p className='metadata_text'>Velit cillum excepteur in exercitation eiusmod laborum laboris incididunt deserunt veniam proident dolor fugiat.
+     In ad culpa elit reprehenderit enim culpa enim laboris nulla qui adipisicing ex. Labore consectetur anim aliquip officia excepteur 
+     reprehenderit non ad laborum nulla ullamco consequat officia. Exercitation duis officia sint commodo et culpa duis id adipisicing.</p>
+     : null
 }
         
          </div>

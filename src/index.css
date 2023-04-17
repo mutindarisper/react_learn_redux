@@ -194,13 +194,13 @@ form {
 }
 .compare{
   position: absolute;
-  margin-top:8px;
-  margin-left: 55vw;
+  top:80vh;
+ left: .2vw;
   background-color: #5c5a5a;
   width: 100px;
   height: 35px;
   padding: 5px;
-  border-radius: 30px;
+  /* border-radius: 30px; */
   cursor: pointer;
 
 }
@@ -224,4 +224,18 @@ form {
   top: -4.5vh;
   left: 3.5vw;
   cursor: pointer;
+}
+.tabs{
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+  margin-left: 50px;
+  margin-top: 30px;
+  color: #5c5a5a;
+  font-weight: 800;
+  cursor: pointer;
+  
+}
+.metadata_text{
+  color: #5c5a5a;
 }
