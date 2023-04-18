@@ -7,6 +7,7 @@ import "leaflet/dist/leaflet.css";
 import axios from 'axios'
 
 import { selectAllRegions } from '../map/MapSlice'
+import { selectAllWetlands } from '../map/WetlandSlice'
 import LulcBar from './charts/LulcBar';
 import shp from "shpjs/dist/shp.js"
 
@@ -77,6 +78,7 @@ const Map = () => {
    const [compare, setCompare] = useState(false)
    const [metadata, setMetaData] = useState(false)
    const [stats, setStats] = useState(false)
+   const [wetland, setWetland] = useState('')
 
 
   //  window.shp = true
@@ -107,6 +109,7 @@ const Map = () => {
   
 
     const mapselections = useSelector(selectAllRegions)
+    const wetlandselections = useSelector(selectAllWetlands)
    
 
     const onRegionChanged = e => {
@@ -134,6 +137,11 @@ const Map = () => {
      return setYear(changed_year)
     }
 
+    const onWetlandChanged = e => {
+      const changed_wetland = e.target.value
+      console.log(changed_wetland, 'selected wetland')
+      return setWetland(changed_wetland)
+    }
 
 
 
@@ -163,6 +171,15 @@ const yearOptions = mapselections.map( selection => (
   </option>
 ))
 
+
+
+
+const wetlandOptions = wetlandselections.wetlands.map( selection => (
+  // console.log(i, 'i') //works 'South africa, angola ....
+   <option key={selection} value={selection} >
+          {selection}
+        </option>
+))
     
 
     const setLeafletMap = () => {
@@ -954,6 +971,18 @@ const show_stats = () => {
 
                     <button className='fetch' onClick={fetchWMS}>Fetch</button>
 
+                    <label htmlFor='wetlands_label' className='wetland'>Select Wetland</label>
+                    <select id='wetland' 
+                    value={wetland}
+                    onChange={onWetlandChanged }
+                    >
+
+                        <option value=''></option>
+                        {wetlandOptions}
+
+                    </select>
+
+
         </div>
 
          <div id='map'> </div>
@@ -971,6 +1000,8 @@ const show_stats = () => {
             </div>
             : null
           }
+
+          
           
 
 
@@ -990,9 +1021,7 @@ const show_stats = () => {
          
           
              <div className='tabs'>
-              {
-                
-              }
+             
              
              <div onClick={show_stats} style={{ color: stats === true ? 'steelblue' : '#5c5a5a', borderBottom:  stats === true ? ' 5px solid' : '' }}> Statistics</div> 
               
@@ -1010,9 +1039,9 @@ const show_stats = () => {
 }
 
 {
-  metadata ? <p className='metadata_text'>Velit cillum excepteur in exercitation eiusmod laborum laboris incididunt deserunt veniam proident dolor fugiat.
-     In ad culpa elit reprehenderit enim culpa enim laboris nulla qui adipisicing ex. Labore consectetur anim aliquip officia excepteur 
-     reprehenderit non ad laborum nulla ullamco consequat officia. Exercitation duis officia sint commodo et culpa duis id adipisicing.</p>
+  metadata ? <p className='metadata_text'> <b>  { wetland } </b> Velit cillum excepteur in exercitation eiusmod laborum laboris incididunt deserunt veniam proident dolor fugiat.
+  In ad culpa elit reprehenderit enim culpa enim laboris nulla qui adipisicing ex. Labore consectetur anim aliquip officia excepteur 
+  reprehenderit non ad laborum nulla ullamco consequat officia. Exercitation duis officia sint commodo et culpa duis id adipisicing.</p>
      : null
 }
         

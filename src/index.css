@@ -239,3 +239,18 @@ form {
 .metadata_text{
   color: #5c5a5a;
 }
+
+#wetland{
+  position: absolute;
+  top: 12vh;
+  left: 70vw; 
+  width: 180px;
+  height: 40px;
+  border-radius: 30px;
+}
+.wetland{
+
+  position: absolute;
+  top: 8vh;
+  left: 70vw; 
+}
