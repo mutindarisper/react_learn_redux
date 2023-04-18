@@ -116,6 +116,7 @@ const Map = () => {
       const changed_region = e.target.value
       console.log(changed_region, 'changed region')
       current_name.current = changed_region
+    
 
         setRegion(e.target.value)
        fetchRegion()
@@ -148,26 +149,26 @@ const Map = () => {
     
    
 
-    const regionOptions = mapselections.map( selection => (
-        <option key={selection.id} value={selection.name}>
-            {selection.name}
+    const regionOptions = wetlandselections.regions.map( selection => (
+        <option key={selection} value={selection}>
+            {selection}
     </option>
     ))
 
-    const indicatorOptions = mapselections.map( selection => (
-      <option key={selection.id} value={selection.indicator}>
-      {selection.indicator}
+    const indicatorOptions = wetlandselections.indicators.map( selection => (
+      <option key={selection} value={selection}>
+      {selection}
       </option>
   ))
 
-  const SubindicatorOptions = mapselections.map( selection => (
-    <option key={selection.id} value={selection.sub_indicator}>
-    {selection.sub_indicator}
+  const SubindicatorOptions = wetlandselections.subindicators.map( selection => (
+    <option key={selection} value={selection}>
+    {selection}
     </option>
 ))
-const yearOptions = mapselections.map( selection => (
-  <option key={selection.id} value={selection.year}>
-  {selection.year}
+const yearOptions = wetlandselections.years.map( selection => (
+  <option  key={selection} value={selection}>
+  {selection}
   </option>
 ))
 
@@ -180,6 +181,26 @@ const wetlandOptions = wetlandselections.wetlands.map( selection => (
           {selection}
         </option>
 ))
+
+const year_style = {
+  menuList: (base) => ({
+    ...base,
+    height: "100px",
+
+   "::-webkit-scrollbar": {
+     width: "9px"
+   },
+   "::-webkit-scrollbar-track": {
+     background: "red"
+   },
+   "::-webkit-scrollbar-thumb": {
+     background: "#888"
+   },
+   "::-webkit-scrollbar-thumb:hover": {
+     background: "#555"
+   }
+})
+}
     
 
     const setLeafletMap = () => {
@@ -959,13 +980,15 @@ const show_stats = () => {
                     </select>
 
                     <label htmlFor='year_label' className='year'>Select Year</label>
-                    <select id='year' 
+                    <select id='year' className='year_list'
                     value={year}
                     onChange={onYearChanged }
+                 
                     >
 
-                        <option value=''></option>
-                        {yearOptions}
+                        <option  id='year_list' value=''></option>
+                         {yearOptions}
+                        
 
                     </select>
 
@@ -1034,7 +1057,8 @@ const show_stats = () => {
        
 {
   wmsLayer.current && stats
-  ?  <LulcBar  data={barchartData}/>
+  ? <> <p style= {{ color: '#5c5a5a'}}>{region} {sub_indicator} {year}</p>
+  <LulcBar  data={barchartData}/> </> 
   : null
 }
 

@@ -1,13 +1,16 @@
+import { useState } from "react";
 import PostsList from "./features/posts/PostsList";
 import AddPostForm from "./features/posts/AddPostForm";
-import Map from "./features/map/Map";
+import Map from "./features/map/Map.js";
 import { configureStore } from "@reduxjs/toolkit";
 import mapReducer from './features/map/MapSlice'
+import wetlandReducer from './features/map/WetlandSlice'
 import { Routes, Route } from 'react-router-dom'
 import { Link, NavLink, useNavigate} from "react-router-dom"
 
 import {  useDispatch, useSelector } from 'react-redux';
 import { selectAllRegions } from './features/map/MapSlice'
+import { selectAllWetlands } from './features/map/WetlandSlice'
 import Home from "./components/Home";
 import About from "./components/About";
 
@@ -22,14 +25,26 @@ function App() {
 // })
 // console.log(region_name, 'region name from app component'); // REGION_ID contains the unsubscribe method
 
+const store = configureStore({
+  reducer: wetlandReducer
+      
+})
+
+//dispatch actions
+// store.subscribe( ()=> { //subscribe method listens to changes made on the state
+//   console.log(store.getState(), 'get state')
+// })
+// store.dispatch(fetchPosts())
 
 const mapselections = useSelector(selectAllRegions)
+const wetlandselections = useSelector(selectAllWetlands)
    
-const selected_region= mapselections.map( selection => (
-
-      selection.name
+const selected_region= wetlandselections.regions.map( selection => (
+console.log(selection, 'app selection')
+      // selection
 
 ))
+console.log('App selected region',wetlandselections.selected_region)
 
 const navigate = useNavigate() //navigate programmatically onclick
 
@@ -49,6 +64,7 @@ const navigate = useNavigate() //navigate programmatically onclick
          {/* </NavLink> */}
         
          <IoInformationCircle height="100" className="about_icon" onClick={() => navigate('about')}/>
+         {/* <p>{selected_region}</p> */}
 
          <Map />
          

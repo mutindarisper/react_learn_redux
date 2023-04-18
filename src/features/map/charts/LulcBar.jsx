@@ -30,7 +30,7 @@ export const options = {
       },
       title: {
         display: true,
-        text: 'Land Cover Chart',
+        // text: 'Land Cover Chart',
       },
     },
   };
