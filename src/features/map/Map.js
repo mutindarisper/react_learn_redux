@@ -8,7 +8,8 @@ import "leaflet/dist/leaflet.css";
 import axios from 'axios'
 import wetlandReducer from '../map/WetlandSlice'
 import { selectAllRegions } from '../map/MapSlice'
-import { selectAllWetlands } from '../map/WetlandSlice'
+import WetlandSlice, { selectAllWetlands } from '../map/WetlandSlice'
+import { changeSelectedRegion } from '../map/WetlandSlice';
 import LulcBar from './charts/LulcBar';
 import shp from "shpjs/dist/shp.js"
 
@@ -111,6 +112,9 @@ const Map = () => {
 
     const mapselections = useSelector(selectAllRegions)
     const wetlandselections = useSelector(selectAllWetlands)
+
+    //return the entire wetland slice
+    const wetlandSlice = useSelector((state => state.wetlandselections)) //return the entire wetland slice
    
 
     const onRegionChanged = e => {
@@ -120,6 +124,9 @@ const Map = () => {
     
 
         setRegion(e.target.value)
+
+        //update the selected_region value using dispatch changeSelelcted region reducer
+        dispatch(changeSelectedRegion(e.target.value))
        fetchRegion()
      
     
@@ -930,10 +937,7 @@ const show_stats = () => {
   setStats(true)
   setMetaData(false)
 }
-const store = configureStore({
-  reducer: wetlandReducer
-      
-})
+
 
       useEffect(() => {
         setLeafletMap()
@@ -1075,6 +1079,8 @@ const store = configureStore({
 }
         
          </div>
+          {/* access the current state of selected region */}
+         <div style={{position: 'absolute', top: '60vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_region}</div>
 
     </div>
    

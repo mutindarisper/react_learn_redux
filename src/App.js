@@ -30,11 +30,7 @@ const store = configureStore({
       
 })
 
-//dispatch actions
-// store.subscribe( ()=> { //subscribe method listens to changes made on the state
-//   console.log(store.getState(), 'get state')
-// })
-// store.dispatch(fetchPosts())
+
 
 const mapselections = useSelector(selectAllRegions)
 const wetlandselections = useSelector(selectAllWetlands)
@@ -44,7 +40,10 @@ console.log(selection, 'app selection')
       // selection
 
 ))
-console.log('App selected region',wetlandselections.selected_region)
+// console.log('App selected region',wetlandselections.selected_region)
+
+
+const wetlandSlice = useSelector((state => state.wetlandselections)) //return the entire wetland slice
 
 const navigate = useNavigate() //navigate programmatically onclick
 
@@ -67,6 +66,8 @@ const navigate = useNavigate() //navigate programmatically onclick
          {/* <p>{selected_region}</p> */}
 
          <Map />
+         <div>Updated Region</div>
+         <span>{wetlandSlice.selected_region}</span>
          
          </div>}></Route>
       {/* <main className="App"> */}
