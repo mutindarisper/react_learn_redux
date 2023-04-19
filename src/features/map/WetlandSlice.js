@@ -14,10 +14,18 @@ const wetlandSlice = createSlice({
     name: 'wetlandselections',
     initialState,
     reducers: {
-        changeSelectedRegion:(state, action) => {
-            state.selected_region = action.payload
+        // changeSelectedRegion:(state, action) => {
+        //     state.selected_region = action.payload
            
-        }
+        // }
+
+        setRegion: (state, payload) => {
+            //state here is an immer draft, do not use that to copy current state
+            console.log("before", state); //init state
+            state.selected_region = 'Nairobi';
+            console.log('after', state)
+            //not returning anyting
+          },
 }
      
 })

@@ -262,3 +262,7 @@ form {
   top: 8vh;
   left: 70vw; 
 }
+
+#username #email{
+  width: 50px;
+}

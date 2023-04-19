@@ -1,11 +1,12 @@
 import React from 'react'
 import { useEffect, useState, useRef } from 'react';
 import {  useDispatch, useSelector } from 'react-redux';
+import { configureStore } from "@reduxjs/toolkit";
 import "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from 'axios'
-
+import wetlandReducer from '../map/WetlandSlice'
 import { selectAllRegions } from '../map/MapSlice'
 import { selectAllWetlands } from '../map/WetlandSlice'
 import LulcBar from './charts/LulcBar';
@@ -929,11 +930,15 @@ const show_stats = () => {
   setStats(true)
   setMetaData(false)
 }
+const store = configureStore({
+  reducer: wetlandReducer
+      
+})
 
       useEffect(() => {
         setLeafletMap()
         // fetchRegion()
-     
+        // store.dispatch(setRegion())
        
         
     
