@@ -17,22 +17,10 @@ import About from "./components/About";
 import { IoHome, IoInformationCircle} from "react-icons/io5";
 
 function App() {
-// const reducer = mapReducer()
-//   const store = configureStore(reducer)
-
-//   const region_name= store.subscribe(() => {
-//     return store.getState().name; // this is isn't returned to REGION_ID
-// })
-// console.log(region_name, 'region name from app component'); // REGION_ID contains the unsubscribe method
-
-const store = configureStore({
-  reducer: wetlandReducer
-      
-})
 
 
 
-const mapselections = useSelector(selectAllRegions)
+
 const wetlandselections = useSelector(selectAllWetlands)
    
 const selected_region= wetlandselections.regions.map( selection => (
@@ -40,7 +28,7 @@ console.log(selection, 'app selection')
       // selection
 
 ))
-// console.log('App selected region',wetlandselections.selected_region)
+
 
 
 const wetlandSlice = useSelector((state => state.wetlandselections)) //return the entire wetland slice
@@ -66,8 +54,8 @@ const navigate = useNavigate() //navigate programmatically onclick
          {/* <p>{selected_region}</p> */}
 
          <Map />
-         <div>Updated Region</div>
-         <span>{wetlandSlice.selected_region}</span>
+         {/* <div>Updated Region in root component</div> access the updated region
+         <span>{wetlandSlice.selected_region}</span> */}
          
          </div>}></Route>
       {/* <main className="App"> */}

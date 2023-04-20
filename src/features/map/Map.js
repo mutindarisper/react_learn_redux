@@ -9,7 +9,7 @@ import axios from 'axios'
 import wetlandReducer from '../map/WetlandSlice'
 import { selectAllRegions } from '../map/MapSlice'
 import WetlandSlice, { selectAllWetlands } from '../map/WetlandSlice'
-import { changeSelectedRegion } from '../map/WetlandSlice';
+import { changeSelectedRegion, changeSelectedIndicator } from '../map/WetlandSlice';
 import LulcBar from './charts/LulcBar';
 import shp from "shpjs/dist/shp.js"
 
@@ -135,6 +135,8 @@ const Map = () => {
     }
     const onIndicatorChanged = e => {
       const changed_indicator = e.target.value
+      dispatch(changeSelectedIndicator(e.target.value))
+
      return setIndicator(changed_indicator)
     }
     const onSubIndicatorChanged = e => {
@@ -1080,7 +1082,7 @@ const show_stats = () => {
         
          </div>
           {/* access the current state of selected region */}
-         <div style={{position: 'absolute', top: '60vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_region}</div>
+         <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_indicator}</div>
 
     </div>
    
