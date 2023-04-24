@@ -82,7 +82,7 @@ form {
   position: absolute;
   top: 12vh;
   left: 5vw; 
-  width: 200px;
+  width: 120px;
   height: 40px;
   border-radius: 30px;
 }
@@ -104,8 +104,8 @@ form {
 #indicator{
   position: absolute;
   top: 12vh;
-  left: 17vw; 
-  width: 200px;
+  left: 13vw; 
+  width: 120px;
   height: 40px;
   border-radius: 30px;
 }
@@ -113,14 +113,14 @@ form {
 
   position: absolute;
   top: 8vh;
-  left: 17vw; 
+  left: 13vw; 
 }
 
 #sub_indicator{
   position: absolute;
   top: 12vh;
-  left: 30vw; 
-  width: 230px;
+  left: 22vw; 
+  width: 160px;
   height: 40px;
   border-radius: 30px;
 }
@@ -128,13 +128,13 @@ form {
 
   position: absolute;
   top: 8vh;
-  left: 30vw; 
+  left: 22vw; 
 }
 #year{
   position: absolute;
   top: 12vh;
-  left: 45vw; 
-  width: 180px;
+  left: 32vw; 
+  width: 145px;
   height: 40px;
   border-radius: 30px;
   overflow-y: scroll !important;
@@ -148,14 +148,14 @@ form {
 
   position: absolute;
   top: 8vh;
-  left: 45vw; 
+  left: 32vw; 
 }
 .fetch{
 
   position: absolute;
   top: 12vh;
-  left: 58vw;
-  width: 180px;
+  left: 42vw;
+  width: 120px;
   height: 40px;
   border-radius: 30px;
   border: none;
@@ -170,6 +170,23 @@ form {
   margin-top:90px;
   margin-left: 75vw;
 
+}
+
+.season{
+  position: absolute;
+  top: 12vh;
+  left: 42vw; 
+  width: 145px;
+  height: 40px;
+  border-radius: 30px;
+  overflow-y: scroll !important;
+ 
+}
+.season_label{
+
+  position: absolute;
+  top: 8vh;
+  left: 42vw; 
 }
 .upload{
   position: absolute;
@@ -248,15 +265,15 @@ form {
   color: #5c5a5a;
 }
 
-#wetland{
+#satellite{
   position: absolute;
   top: 12vh;
   left: 70vw; 
-  width: 180px;
+  width: 130px;
   height: 40px;
   border-radius: 30px;
 }
-.wetland{
+.satellite{
 
   position: absolute;
   top: 8vh;

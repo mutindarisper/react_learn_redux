@@ -9,7 +9,7 @@ import axios from 'axios'
 import wetlandReducer from '../map/WetlandSlice'
 import { selectAllRegions } from '../map/MapSlice'
 import WetlandSlice, { selectAllWetlands } from '../map/WetlandSlice'
-import { changeSelectedRegion, changeSelectedIndicator } from '../map/WetlandSlice';
+import { changeSelectedRegion, changeSelectedIndicator, changeSelectedSubIndicator } from '../map/WetlandSlice';
 import LulcBar from './charts/LulcBar';
 import shp from "shpjs/dist/shp.js"
 
@@ -81,6 +81,8 @@ const Map = () => {
    const [metadata, setMetaData] = useState(false)
    const [stats, setStats] = useState(false)
    const [wetland, setWetland] = useState('')
+   const [satellite, setSatellite] = useState('')
+   const [season, setSeason] = useState('')
 
 
   //  window.shp = true
@@ -141,6 +143,7 @@ const Map = () => {
     }
     const onSubIndicatorChanged = e => {
       const changed_sub_indicator = e.target.value
+      dispatch(changeSelectedSubIndicator(e.target.value))
      return setSubIndicator(changed_sub_indicator)
     }
     const onYearChanged = e => {
@@ -152,6 +155,19 @@ const Map = () => {
       const changed_wetland = e.target.value
       console.log(changed_wetland, 'selected wetland')
       return setWetland(changed_wetland)
+    }
+
+    const onSatelliteChanged = e => {
+      const changed_satellite = e.target.value
+      console.log(changed_satellite, 'selected satellite')
+      return setSatellite(changed_satellite)
+    }
+
+
+    const onSeasonChanged = e => {
+      const changed_season = e.target.value
+      console.log(changed_season, 'selected season')
+      return setSeason(changed_season)
     }
 
 
@@ -181,6 +197,18 @@ const yearOptions = wetlandselections.years.map( selection => (
   {selection}
   </option>
 ))
+const satelliteOptions = wetlandselections.satellites.map( selection => (
+  <option  key={selection} value={selection}>
+  {selection}
+  </option>
+))
+
+const seasonOptions = wetlandselections.seasons.map( selection => (
+  <option  key={selection} value={selection}>
+  {selection}
+  </option>
+))
+
 
 
 
@@ -714,12 +742,7 @@ const fetchRegion = async() => {
     
   }
 }
-
-const fetchWMS = () => {
-  if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
-  map.current.createPane("pane400").style.zIndex = 200;
-  console.log(year, 'year in fetch')
-
+const lulc_style = () => {
   if(region === 'Cuvelai'  && sub_indicator === 'Land Cover'){
     styles.current = 'cuvelai_lulc'
 
@@ -736,39 +759,40 @@ const fetchWMS = () => {
     styles.current = 'zambezi_lulc'
 
   }
+}
 
+const fetchLULC = () => {
   if(sub_indicator === 'Land Cover') {
-  //   console.log(custom_polygon.current.geometry.coordinates[0], 'custome ')
-  //   var feature=  custom_polygon.current
-  //   var turf_bbox = turf.bbox(feature)
-  //   console.log(turf_bbox, 'turf bbox')
-  //   var str =  wkt.stringify(custom_polygon.current.geometry)
-  //   console.log(str, 'str')
-
-  //  var bounds_ =  map.current.getBounds(custom_polygon.current).toBBoxString()
-  //  console.log(bounds_, 'bounds')
-    wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/LULC/wms?", {
-      pane: 'pane400',
-      layers: `LULC:${year}`,
-      crs:L.CRS.EPSG4326,
-      styles: styles.current,
-      // bounds: map.current.getBounds(custom_polygon.current).toBBoxString(),
-    
-      format: 'image/png',
-      transparent: true,
-      opacity:1.0
+    //   console.log(custom_polygon.current.geometry.coordinates[0], 'custome ')
+    //   var feature=  custom_polygon.current
+    //   var turf_bbox = turf.bbox(feature)
+    //   console.log(turf_bbox, 'turf bbox')
+    //   var str =  wkt.stringify(custom_polygon.current.geometry)
+    //   console.log(str, 'str')
+  
+    //  var bounds_ =  map.current.getBounds(custom_polygon.current).toBBoxString()
+    //  console.log(bounds_, 'bounds')
+      wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/LULC/wms?", {
+        pane: 'pane400',
+        layers: `LULC:${year}`,
+        crs:L.CRS.EPSG4326,
+        styles: styles.current,
+        // bounds: map.current.getBounds(custom_polygon.current).toBBoxString(),
       
-      
-     
- });
-
- wmsLayer.current.addTo(map.current);
-
-  }
-
-
-
-  if(sub_indicator === 'Vegetation Cover') {
+        format: 'image/png',
+        transparent: true,
+        opacity:1.0
+        
+        
+       
+   });
+  
+   wmsLayer.current.addTo(map.current);
+  
+    }
+}
+const fetchSentinelNDVI = () => {
+  if(sub_indicator === 'Vegetation Cover' && custom_polygon.current.geometry) {
 
     const instanceID = "cf1096bb-15f1-4674-bc55-5e5d8fcec549"
   const firstDate = "2022-05-31";
@@ -858,6 +882,44 @@ console.log('str custom geom',geom_str)
   wmsLayer.current.addTo(map.current)
    }
 
+
+}
+const fetchVegCover = () => {
+  if(sub_indicator === 'Vegetation Cover') {
+    
+    wmsLayer.current =  L.tileLayer.wms(`http://66.42.65.87:8080/geoserver/${satellite}_NDVI_${season}/wms?`, {
+     pane: 'pane400',
+     layers: `${satellite}_NDVI_${season}:${year}`,
+     crs:L.CRS.EPSG4326,
+     styles: region === 'Cuvelai' ? 'cuvelai_ndvi' :  region === 'Zambezi' ? 'zambezi_ndvi':  region === 'Limpopo' ? 'limpopo_ndvi': 'okavango_ndvi',
+     format: 'image/png',
+     transparent: true,
+     opacity:1.0
+     // CQL_FILTER: "Band1='1.0'"
+     
+    
+});
+
+
+wmsLayer.current.addTo(map.current);
+  }
+
+}
+
+const fetchWMS = () => {
+  if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
+  map.current.createPane("pane400").style.zIndex = 200;
+  console.log(year, 'year in fetch')
+  console.log('vegcover params', region, satellite, year, season)
+
+ 
+  lulc_style()
+  fetchLULC()
+  fetchVegCover()
+
+
+
+ 
 
   const getStats = async () => {
     try {
@@ -990,8 +1052,8 @@ const show_stats = () => {
 
                     </select>
 
-                    <label htmlFor='year_label' className='year'>Select Year</label>
-                    <select id='year' className='year_list'
+                    <label htmlFor='year_label' className='year' style={{left:sub_indicator === 'Vegetation Cover' ? '40vw' : '32vw' }}>Select Year</label>
+                    <select id='year'  style={{left:sub_indicator === 'Vegetation Cover' ? '40vw' : '32vw' }}
                     value={year}
                     onChange={onYearChanged }
                  
@@ -1003,16 +1065,27 @@ const show_stats = () => {
 
                     </select>
 
-                    <button className='fetch' onClick={fetchWMS}>Fetch</button>
+                    <button className='fetch' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' : '42vw' }}>Fetch</button>
 
-                    <label htmlFor='wetlands_label' className='wetland'>Select Wetland</label>
-                    <select id='wetland' 
-                    value={wetland}
-                    onChange={onWetlandChanged }
+                    <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}>Select Satellite</label>
+                    <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}
+                    value={satellite}
+                    onChange={onSatelliteChanged }
                     >
 
                         <option value=''></option>
-                        {wetlandOptions}
+                        {satelliteOptions}
+
+                    </select>
+
+                    <label htmlFor='season_label'  className='season_label' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' : '-10vw' }}>Select Season</label>
+                    <select id='season'  className='season' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' : '-10vw' }}
+                    value={season}
+                    onChange={onSeasonChanged }
+                    >
+
+                        <option value=''></option>
+                        {seasonOptions}
 
                     </select>
 
@@ -1082,7 +1155,7 @@ const show_stats = () => {
         
          </div>
           {/* access the current state of selected region */}
-         <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_indicator}</div>
+         <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_subindicator}</div>
 
     </div>
    

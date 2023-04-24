@@ -8,7 +8,10 @@ const initialState = {
     indicators:['Exposure', 'Sensitivity','Resiliance'],
     selected_indicator: '',
     subindicators:['Land Cover', 'Vegetation Cover', "Wetland Inventory"],
-    years: ["2016","2017",'2018','2019','2020', '2021', "2022"]
+    selected_subindicator: '',
+    years: ["2016","2017",'2018','2019','2020', '2021', "2022"],
+    satellites: ['SENTINEL', 'LANDSAT'],
+    seasons: ['WET', 'DRY']
 }
 
 const wetlandSlice = createSlice({
@@ -31,6 +34,9 @@ const wetlandSlice = createSlice({
             state.subindicators = ['Burnt Area FIRMS', 'Precipitation Index', 'Undulation']
           }
           
+        },
+        changeSelectedSubIndicator: (state, action) => {
+            state.selected_subindicator = action.payload
         }
 
         
@@ -39,5 +45,5 @@ const wetlandSlice = createSlice({
 })
 
 export const selectAllWetlands = (state) => state.wetlandselections;
-export const {changeSelectedRegion, changeSelectedIndicator} = wetlandSlice.actions
+export const {changeSelectedRegion, changeSelectedIndicator, changeSelectedSubIndicator} = wetlandSlice.actions
 export default wetlandSlice.reducer
