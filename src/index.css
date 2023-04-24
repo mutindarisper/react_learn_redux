@@ -188,6 +188,22 @@ form {
   top: 8vh;
   left: 42vw; 
 }
+
+.parameter{
+  position: absolute;
+  top: 12vh;
+  left: 42vw; 
+  width: 145px;
+  height: 40px;
+  border-radius: 30px;
+  
+ 
+}
+.parameter_label{
+  position: absolute;
+  top: 8vh;
+  left: 42vw; 
+}
 .upload{
   position: absolute;
   margin-top:10px;

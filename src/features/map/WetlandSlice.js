@@ -11,7 +11,8 @@ const initialState = {
     selected_subindicator: '',
     years: ["2016","2017",'2018','2019','2020', '2021', "2022"],
     satellites: ['SENTINEL', 'LANDSAT'],
-    seasons: ['WET', 'DRY']
+    seasons: ['WET', 'DRY'],
+    parameters: ['Wetland Extent', 'Wetland Status']
 }
 
 const wetlandSlice = createSlice({
@@ -32,6 +33,14 @@ const wetlandSlice = createSlice({
           }
           if(state.selected_indicator === 'Resiliance'){
             state.subindicators = ['Burnt Area FIRMS', 'Precipitation Index', 'Undulation']
+          }
+
+          if(state.selected_subindicator === 'Wetland Inventory'){
+            state.parameters = ['Wetland Extent', 'Wetland Status']
+    
+          }
+          if(state.selected_subindicator=== 'Water Quality'){
+            state.parameters = ['Turbidity', 'Sus Sediments']
           }
           
         },
