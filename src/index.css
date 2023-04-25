@@ -1,3 +1,5 @@
+
+
 * {
   margin: 0;
   padding: 0;
@@ -299,3 +301,15 @@ form {
 #username #email{
   width: 50px;
 }
+
+.toggle{
+  height: 200px;
+  position: absolute;
+  left: 72vw;
+  top: 75vh;
+  z-index: 500;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

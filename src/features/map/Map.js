@@ -37,7 +37,7 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css"
 import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"
 
 
-import { IoCloseCircleSharp} from "react-icons/io5";
+import { IoCloseCircleSharp, IoArrowBackCircleOutline} from "react-icons/io5";
 import { Routes, Route } from 'react-router-dom'
 import { Link, NavLink} from "react-router-dom"
 
@@ -84,6 +84,7 @@ const Map = () => {
    const [satellite, setSatellite] = useState('')
    const [season, setSeason] = useState('')
    const [parameter, setParameter] = useState('')
+   const [open, setOpen] = useState(false)
 
 
   //  window.shp = true
@@ -715,6 +716,25 @@ map.current.pm.disableDraw();
 
         }
     
+        const person = {
+          name: 'Risper',
+          occupation: 'frontend developer',
+          faveFramework: 'React'
+        }
+
+        //create a second person with same properties but change the property faveframework using a spread operator
+        const person2 = {...person, faveFramework:'Vue'}
+        console.log(person2, 'person2 faveframework')
+        const names = ['Plain', 'Jane', 'Queen']
+        const names2 = [...names, 'Nicki']      
+        console.log(names2, 'added nicki to names')
+        //important functions, .filter
+      //loop through the array and return names that is not queen
+      const filtered_array = names2.filter( (name) => {
+        return name !== 'Queen'
+      })
+      console.log(filtered_array, 'filtered array')
+      
       
       } 
 
@@ -1227,7 +1247,7 @@ const show_stats = () => {
     <div className='dashboard'>
         <div className='selections'>
         <label htmlFor='regions' className='region_label'>Select Region</label>
-                    <select id='regions' 
+                    <select id='regions' className='text-black text-base pl-5 outline-none'
                     value={region}
                     onChange={onRegionChanged }
                     >
@@ -1238,7 +1258,7 @@ const show_stats = () => {
                     </select>
 
                     <label htmlFor='indicator' className='indicator_label'>Select Indicator</label>
-                    <select id='indicator' 
+                    <select id='indicator' className='text-black text-base pl-2 pr-2 outline-none'
                     value={indicator}
                     onChange={onIndicatorChanged }
                     >
@@ -1249,7 +1269,7 @@ const show_stats = () => {
                     </select>
 
                     <label htmlFor='sub_indicator' className='sub_indicator_label'>Select Sub-Indicator</label>
-                    <select id='sub_indicator' 
+                    <select id='sub_indicator' className='text-black text-base pl-1 pr-1 outline-none'
                     value={sub_indicator}
                     onChange={onSubIndicatorChanged }
                     >
@@ -1261,7 +1281,7 @@ const show_stats = () => {
 
                     <label htmlFor='year_label' className='year' style={{left:sub_indicator === 'Vegetation Cover' ? '40vw':
                     sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality' ? '40vw' : '32vw' }}>Select Year</label>
-                    <select id='year'  style={{left:sub_indicator === 'Vegetation Cover' ? '40vw':
+                    <select id='year'  className='text-black text-base pl-5 outline-none' style={{left:sub_indicator === 'Vegetation Cover' ? '40vw':
                      sub_indicator === 'Wetland Inventory'  || sub_indicator ===  'Water Quality' ? '40vw' : '32vw' }}
                     value={year}
                     onChange={onYearChanged }
@@ -1274,7 +1294,7 @@ const show_stats = () => {
 
                     </select>
 
-                    <button className='fetch' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' :
+                    <button className='fetch bg-white text-black' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' :
                      parameter === 'Wetland Extent' || sub_indicator ===  'Water Quality'  ? '49vw' :
                      sub_indicator === 'Precipitation Index' ? '50vw' : 
                      sub_indicator === 'Soil Moisure Index' ? '50vw':
@@ -1282,7 +1302,7 @@ const show_stats = () => {
 
                     <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' :
                     parameter === 'Wetland Status' ? '57vw': '-10vw' }}>Select Satellite</label>
-                    <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' :
+                    <select id='satellite'  className='satellite text-black text-base pl-5 outline-none' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' :
                      parameter === 'Wetland Status' ? '57vw' : '-10vw' }}
                     value={satellite}
                     onChange={onSatelliteChanged }
@@ -1296,8 +1316,8 @@ const show_stats = () => {
                     <label htmlFor='season_label'  className='season_label' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
                     sub_indicator === 'Precipitation Index' ? '41vw' :
                     sub_indicator === 'Soil Moisure Index' ? '41vw':
-                    parameter === 'Wetland Status' ? '40vw': '-10vw' }}>Select Season</label>
-                    <select id='season'  className='season' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
+                    parameter === 'Wetland Status' ? '48vw': '-10vw' }}>Select Season</label>
+                    <select id='season'  className='season text-black text-base pl-5 outline-none'  style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
                     sub_indicator === 'Precipitation Index' ? '41vw' :
                     sub_indicator === 'Soil Moisure Index' ? '41vw':
                     parameter === 'Wetland Status' ? '48vw': '-10vw' }}
@@ -1315,7 +1335,7 @@ const show_stats = () => {
   <>
   
    <label htmlFor='parameter_label'  className='parameter_label' style={{left:sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality' ? '32vw' : '-100vw' }}>Select Parameter</label>
-  <select id='parameter'  className='parameter' style={{left:sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '32vw' : '-10vw' }}
+  <select id='parameter'  className='parameter text-black pl-5 text-base outline-none' style={{left:sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '32vw' : '-10vw' }}
   value={parameter}
   onChange={onParameterChanged }
   >
@@ -1334,7 +1354,7 @@ const show_stats = () => {
 
         </div>
 
-         <div id='map'> </div>
+         <div id='map' > </div>
          {/* {
           wmsLayer.current ? <div  className='container'> yes</div> 
           : ''
@@ -1359,7 +1379,12 @@ const show_stats = () => {
           <input type="file" id="file" /> 
 <input type="submit" id="submit" /> <span id="warning"></span>
 
-         <div className='charts' > 
+<div >
+  <IoArrowBackCircleOutline className='toggle'  onClick={ () => setOpen(!open) } />
+
+</div>
+
+         <div className={ open ? 'charts duration-400' : null} > 
          {/* {region} 
          {indicator}
          {sub_indicator}
@@ -1397,7 +1422,7 @@ const show_stats = () => {
         
          </div>
           {/* access the current state of selected region */}
-         <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_subindicator}</div>
+         {/* <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_subindicator}</div> */}
 
     </div>
    
