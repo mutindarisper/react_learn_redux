@@ -971,6 +971,30 @@ const fetchWetlandExtent = () => {
   }
 
  }
+
+ const addFirmsLayer = () => {
+  if(sub_indicator === 'Burnt Area FIRMS') {
+  
+wmsLayer.current =  L.tileLayer.wms(`http://66.42.65.87:8080/geoserver/FIRMS_DRY/wms?`, {
+     pane: 'pane400',
+     layers: `FIRMS_DRY:${year}`,
+     crs:L.CRS.EPSG4326,
+     styles: `${region}_firms`,
+     format: 'image/png',
+     transparent: true,
+     opacity:1.0
+     // CQL_FILTER: "Band1='1.0'"
+     
+    
+});
+
+
+wmsLayer.current.addTo(map.current);
+
+}
+
+ }
+
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
   map.current.createPane("pane400").style.zIndex = 200;
@@ -983,7 +1007,7 @@ const fetchWMS = () => {
   fetchVegCover()
   fetchWetlandExtent()
   addSuspendedSediments()
-
+  addFirmsLayer()
 
 
  
