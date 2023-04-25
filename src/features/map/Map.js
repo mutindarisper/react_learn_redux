@@ -1018,6 +1018,28 @@ wmsLayer.current.addTo(map.current);
     wmsLayer.current.addTo(map.current);
   }
  }
+
+ const addPrecIndexDry = () => {
+  if(sub_indicator === 'Precipitation Index' && season === 'DRY' ) {
+  
+    
+    wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/SPI_DRY/wms?", {
+       pane: 'pane400',
+       layers: `SPI_DRY:${year}`,
+       crs:L.CRS.EPSG4326,
+       styles: region === 'Cuvelai' ? 'cuvelai_spi' :  region === 'Zambezi' ? 'zambezi_spi':  region === 'Limpopo' ? 'limpopo_spi': 'okavango_spi',
+       format: 'image/png',
+       transparent: true,
+       opacity:1.0
+       // CQL_FILTER: "Band1='1.0'"
+       
+      
+    });
+    
+    
+    wmsLayer.current.addTo(map.current);
+  }
+ }
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
   map.current.createPane("pane400").style.zIndex = 200;
@@ -1032,6 +1054,7 @@ const fetchWMS = () => {
   addSuspendedSediments()
   addFirmsLayer()
   addPrecIndexWet()
+  addPrecIndexDry()
 
 
  
