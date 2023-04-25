@@ -945,7 +945,32 @@ const fetchWetlandExtent = () => {
   }
 
  }
+ const addSuspendedSediments = () => {
+  if(sub_indicator === 'Water Quality' && parameter === 'Sus Sediments') {
+  
+  // console.log('just to see if request is accessed') //accessed
 
+  
+  wmsLayer.current=  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/NDWI/wms?", {
+     pane: 'pane400',
+     layers: `NDWI:${year}`,
+     crs:L.CRS.EPSG4326,
+     styles: region === 'Cuvelai' ? 'cuvelai_water' :  region === 'Zambezi' ? 'zambezi_water':  region === 'Limpopo' ? 'limpopo_water': 'okavango_water',
+     format: 'image/png',
+     transparent: true,
+     opacity:1.0
+     // CQL_FILTER: "Band1='1.0'"
+     
+    
+  });
+  
+  
+  wmsLayer.current.addTo(map.current);
+  
+   
+  }
+
+ }
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
   map.current.createPane("pane400").style.zIndex = 200;
@@ -957,6 +982,7 @@ const fetchWMS = () => {
   fetchLULC()
   fetchVegCover()
   fetchWetlandExtent()
+  addSuspendedSediments()
 
 
 
@@ -1094,9 +1120,9 @@ const show_stats = () => {
                     </select>
 
                     <label htmlFor='year_label' className='year' style={{left:sub_indicator === 'Vegetation Cover' ? '40vw':
-                    sub_indicator === 'Wetland Inventory' ? '40vw' : '32vw' }}>Select Year</label>
+                    sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality' ? '40vw' : '32vw' }}>Select Year</label>
                     <select id='year'  style={{left:sub_indicator === 'Vegetation Cover' ? '40vw':
-                     sub_indicator === 'Wetland Inventory' ? '40vw' : '32vw' }}
+                     sub_indicator === 'Wetland Inventory'  || sub_indicator ===  'Water Quality' ? '40vw' : '32vw' }}
                     value={year}
                     onChange={onYearChanged }
                  
@@ -1109,7 +1135,7 @@ const show_stats = () => {
                     </select>
 
                     <button className='fetch' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' :
-                     sub_indicator === 'Wetland Inventory' ? '49vw' : '42vw' }}>Fetch</button>
+                     sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '49vw' : '42vw' }}>Fetch</button>
 
                     <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}>Select Satellite</label>
                     <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}
@@ -1133,16 +1159,26 @@ const show_stats = () => {
 
                     </select>
 
-                    <label htmlFor='parameter_label'  className='parameter_label' style={{left:sub_indicator === 'Wetland Inventory' ? '32vw' : '-10vw' }}>Select Parameter</label>
-                    <select id='parameter'  className='parameter' style={{left:sub_indicator === 'Wetland Inventory' ? '32vw' : '-10vw' }}
-                    value={parameter}
-                    onChange={onParameterChanged }
-                    >
+{
+  sub_indicator === 'Wetland Inventory' || sub_indicator === 'Water Quality' ? 
+  <>
+  
+   <label htmlFor='parameter_label'  className='parameter_label' style={{left:sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality' ? '32vw' : '-100vw' }}>Select Parameter</label>
+  <select id='parameter'  className='parameter' style={{left:sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '32vw' : '-10vw' }}
+  value={parameter}
+  onChange={onParameterChanged }
+  >
 
-                        <option value=''></option>
-                        {parameterOptions}
+      <option value=''></option>
+      {parameterOptions}
 
-                    </select>
+  </select>
+  
+   </>
+  : null
+
+}
+                    
 
 
         </div>

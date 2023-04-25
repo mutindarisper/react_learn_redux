@@ -192,7 +192,7 @@ form {
 .parameter{
   position: absolute;
   top: 12vh;
-  left: 42vw; 
+  left: 0vw; 
   width: 145px;
   height: 40px;
   border-radius: 30px;
@@ -202,7 +202,7 @@ form {
 .parameter_label{
   position: absolute;
   top: 8vh;
-  left: 42vw; 
+  left: 0vw; 
 }
 .upload{
   position: absolute;

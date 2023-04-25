@@ -35,17 +35,19 @@ const wetlandSlice = createSlice({
             state.subindicators = ['Burnt Area FIRMS', 'Precipitation Index', 'Undulation']
           }
 
-          if(state.selected_subindicator === 'Wetland Inventory'){
-            state.parameters = ['Wetland Extent', 'Wetland Status']
-    
-          }
-          if(state.selected_subindicator=== 'Water Quality'){
-            state.parameters = ['Turbidity', 'Sus Sediments']
-          }
-          
+         
         },
         changeSelectedSubIndicator: (state, action) => {
             state.selected_subindicator = action.payload
+
+            if(state.selected_subindicator === 'Wetland Inventory'){
+              state.parameters = ['Wetland Extent', 'Wetland Status']
+      
+            }
+            if(state.selected_subindicator === 'Water Quality'){
+              state.parameters = ['Turbidity', 'Sus Sediments']
+            }
+            
         }
 
         
