@@ -1040,6 +1040,28 @@ wmsLayer.current.addTo(map.current);
     wmsLayer.current.addTo(map.current);
   }
  }
+ const addFloodLayer = () => {
+  if(sub_indicator === 'Undulation') {
+  
+wmsLayer.current =  L.tileLayer.wms(`http://66.42.65.87:8080/geoserver/FLOOD/wms`, {
+     pane: 'pane400',
+     layers: `FLOOD:FLOOD`,
+     crs:L.CRS.EPSG4326,
+     styles: `${region}_flood`,
+     format: 'image/png',
+     transparent: true,
+     opacity:1.0
+     // CQL_FILTER: "Band1='1.0'"
+     
+    
+});
+
+
+wmsLayer.current.addTo(map.current);
+
+}
+ }
+
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
   map.current.createPane("pane400").style.zIndex = 200;
@@ -1055,6 +1077,7 @@ const fetchWMS = () => {
   addFirmsLayer()
   addPrecIndexWet()
   addPrecIndexDry()
+  addFloodLayer()
 
 
  
