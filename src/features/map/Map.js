@@ -1061,6 +1061,50 @@ wmsLayer.current.addTo(map.current);
 
 }
  }
+ const addWetlandStatus = () => {
+  if(sub_indicator === 'Wetland Inventory' && parameter === 'Wetland Status' ) { //&& season.value === 'DRY'
+ 
+  
+  wmsLayer.current =  L.tileLayer.wms(`http://66.42.65.87:8080/geoserver/${satellite}_NDVI_${season}/wms?`, {
+       pane: 'pane400',
+       layers: `${satellite}_NDVI_${season}:${year}`,
+       crs:L.CRS.EPSG4326,
+       styles: region === 'Cuvelai' ? 'cuvelai_status' :  region === 'Zambezi' ? 'zambezi_status':  region === 'Limpopo' ? 'limpopo_status': 'okavango_status',
+       format: 'image/png',
+       transparent: true,
+       opacity:1.0
+       // CQL_FILTER: "Band1='1.0'"
+       
+      
+  });
+  
+  
+  wmsLayer.current.addTo(map.current);
+
+}
+ }
+
+ const addSMILayer = () => {
+  if(sub_indicator === 'Soil Moisure Index') {
+  
+
+  wmsLayer.current =  L.tileLayer.wms(`http://66.42.65.87:8080/geoserver/SMI_${season}/wms?`, {
+       pane: 'pane400',
+       layers: `SMI_${season}:${year}`,
+       crs:L.CRS.EPSG4326,
+       styles: `${region}_smi`,
+       format: 'image/png',
+       transparent: true,
+       opacity:1.0
+       // CQL_FILTER: "Band1='1.0'"
+       
+      
+  });
+  
+  
+  wmsLayer.current.addTo(map.current);
+}
+ }
 
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
@@ -1078,6 +1122,8 @@ const fetchWMS = () => {
   addPrecIndexWet()
   addPrecIndexDry()
   addFloodLayer()
+  addWetlandStatus()
+  addSMILayer()
 
 
  
@@ -1229,11 +1275,15 @@ const show_stats = () => {
                     </select>
 
                     <button className='fetch' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' :
-                     sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '49vw' :
-                     sub_indicator === 'Precipitation Index' ? '50vw' : '42vw' }}>Fetch</button>
+                     parameter === 'Wetland Extent' || sub_indicator ===  'Water Quality'  ? '49vw' :
+                     sub_indicator === 'Precipitation Index' ? '50vw' : 
+                     sub_indicator === 'Soil Moisure Index' ? '50vw':
+                     sub_indicator === 'Wetland Inventory' && parameter === 'Wetland Status' ? '65vw' : '42vw' }}>Fetch</button>
 
-                    <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}>Select Satellite</label>
-                    <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}
+                    <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' :
+                    parameter === 'Wetland Status' ? '57vw': '-10vw' }}>Select Satellite</label>
+                    <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' :
+                     parameter === 'Wetland Status' ? '57vw' : '-10vw' }}
                     value={satellite}
                     onChange={onSatelliteChanged }
                     >
@@ -1244,9 +1294,13 @@ const show_stats = () => {
                     </select>
 
                     <label htmlFor='season_label'  className='season_label' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
-                    sub_indicator === 'Precipitation Index' ? '41vw' : '-10vw' }}>Select Season</label>
+                    sub_indicator === 'Precipitation Index' ? '41vw' :
+                    sub_indicator === 'Soil Moisure Index' ? '41vw':
+                    parameter === 'Wetland Status' ? '40vw': '-10vw' }}>Select Season</label>
                     <select id='season'  className='season' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
-                    sub_indicator === 'Precipitation Index' ? '41vw' : '-10vw' }}
+                    sub_indicator === 'Precipitation Index' ? '41vw' :
+                    sub_indicator === 'Soil Moisure Index' ? '41vw':
+                    parameter === 'Wetland Status' ? '48vw': '-10vw' }}
                     value={season}
                     onChange={onSeasonChanged }
                     >
