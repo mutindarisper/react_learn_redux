@@ -995,6 +995,29 @@ wmsLayer.current.addTo(map.current);
 
  }
 
+ const addPrecIndexWet = () => {
+
+  if(sub_indicator === 'Precipitation Index' && season === 'WET' ) {
+  
+    wmsLayer.current =  L.tileLayer.wms("http://66.42.65.87:8080/geoserver/SPI_WET/wms?", {
+       pane: 'pane400',
+       layers: `SPI_WET:${year}`,
+       crs:L.CRS.EPSG4326,
+       styles: region === 'Cuvelai' ? 'cuvelai_spi' :  region === 'Zambezi' ? 'zambezi_spi':   region=== 'Limpopo' ? 'limpopo_spi': 'okavango_spi',
+       format: 'image/png',
+       transparent: true,
+       opacity:1.0
+       // CQL_FILTER: "Band1='1.0'"
+       
+      
+    });
+  
+  
+  
+  
+    wmsLayer.current.addTo(map.current);
+  }
+ }
 const fetchWMS = () => {
   if(wmsLayer.current)map.current.removeLayer(wmsLayer.current)
   map.current.createPane("pane400").style.zIndex = 200;
@@ -1008,6 +1031,7 @@ const fetchWMS = () => {
   fetchWetlandExtent()
   addSuspendedSediments()
   addFirmsLayer()
+  addPrecIndexWet()
 
 
  
@@ -1159,7 +1183,8 @@ const show_stats = () => {
                     </select>
 
                     <button className='fetch' onClick={fetchWMS} style={{left:sub_indicator === 'Vegetation Cover' ? '60vw' :
-                     sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '49vw' : '42vw' }}>Fetch</button>
+                     sub_indicator === 'Wetland Inventory' || sub_indicator ===  'Water Quality'  ? '49vw' :
+                     sub_indicator === 'Precipitation Index' ? '50vw' : '42vw' }}>Fetch</button>
 
                     <label htmlFor='satellite_label'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}>Select Satellite</label>
                     <select id='satellite'  className='satellite' style={{left:sub_indicator === 'Vegetation Cover' ? '32vw' : '-10vw' }}
@@ -1172,8 +1197,10 @@ const show_stats = () => {
 
                     </select>
 
-                    <label htmlFor='season_label'  className='season_label' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' : '-10vw' }}>Select Season</label>
-                    <select id='season'  className='season' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' : '-10vw' }}
+                    <label htmlFor='season_label'  className='season_label' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
+                    sub_indicator === 'Precipitation Index' ? '41vw' : '-10vw' }}>Select Season</label>
+                    <select id='season'  className='season' style={{left:sub_indicator === 'Vegetation Cover' ? '49vw' :
+                    sub_indicator === 'Precipitation Index' ? '41vw' : '-10vw' }}
                     value={season}
                     onChange={onSeasonChanged }
                     >
