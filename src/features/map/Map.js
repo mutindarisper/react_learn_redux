@@ -38,6 +38,7 @@ import "@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"
 
 
 import { IoCloseCircleSharp, IoArrowBackCircleOutline} from "react-icons/io5";
+import { FaArrowCircleLeft, FaArrowCircleRight  } from "react-icons/fa"
 import { Routes, Route } from 'react-router-dom'
 import { Link, NavLink} from "react-router-dom"
 
@@ -178,6 +179,20 @@ const Map = () => {
       return setParameter(changed_parameter)
     }
 
+    // const shiftControls = () => {
+    //   if(open === true) {
+    //     // document.getElementsByClassName('leaflet-pm-toolbar')
+    //     document.querySelector(".leaflet-top.leaflet-right").style.position = "absolute"
+    //     document.querySelector(".leaflet-top.leaflet-right").style.zIndex = "1000"
+    //     document.querySelector(".leaflet-top.leaflet-right").style.top = "-300px"
+    //     document.querySelector(".leaflet-top.leaflet-right").style.margin = "500px"
+    //   }
+    //   if(open === false) {
+    //     document.querySelector(".leaflet-top.leaflet-right").style.position = "topright"
+    //   }
+      
+    // }
+
 
 
 
@@ -305,7 +320,7 @@ const year_style = {
           // minZoom: 6.5,
           // maxZoom: 20,
           zoom: 5.5,
-          measureControl: true,
+          // measureControl: true,
           // defaultExtentControl: true,
           layers: [mapboxSatellite]
         }); // add the basemaps to the controls
@@ -1354,10 +1369,10 @@ const show_stats = () => {
 
         </div>
 
-         <div id='map' > </div>
+        
          {/* {
-          wmsLayer.current ? <div  className='container'> yes</div> 
-          : ''
+          wmsLayer.current ? <div  className='container'> yes</div>  className={open ? ' flex-auto float-left' : 'map'}
+          : '' 
          }
           */}
 
@@ -1379,48 +1394,73 @@ const show_stats = () => {
           <input type="file" id="file" /> 
 <input type="submit" id="submit" /> <span id="warning"></span>
 
-<div >
-  <IoArrowBackCircleOutline className='toggle'  onClick={ () => setOpen(!open) } />
+<div className={open ? 'absolute -left-60' : ' toggle_div  w-7 h-7 z-700' }>
+  <FaArrowCircleLeft className='toggle cursor-pointer z-1000 '  onClick={ () => { setOpen(!open)}} />
+ 
 
 </div>
 
-         <div className={ open ? 'charts duration-400' : null} > 
-         {/* {region} 
-         {indicator}
-         {sub_indicator}
-         {year} */}
-         {console.log(barchartData, 'bar chart data in chart component')} 
 
+
+
+<div>
+<div id='map' > </div>
+
+<div className={ open ? 'charts duration-500 z-700 transition-transform -translate-x-10' : null} > 
+{/* {region} 
+{indicator}
+{sub_indicator}
+{year} */}
+{console.log(barchartData, 'bar chart data in chart component')} 
+
+
+
+ {
+   
+   open ?  <div className='tabs'>
+    
+    
+      <div onClick={show_stats} style={{ color: stats === true ? 'steelblue' : '#5c5a5a', borderBottom:  stats === true ? ' 5px solid' : '' }}> Statistics</div> 
        
-         
-          
-             <div className='tabs'>
-             
-             
-             <div onClick={show_stats} style={{ color: stats === true ? 'steelblue' : '#5c5a5a', borderBottom:  stats === true ? ' 5px solid' : '' }}> Statistics</div> 
-              
-            <div onClick={show_metadata} style={{ color: metadata === true ? 'steelblue' : '#5c5a5a', borderBottom:  metadata === true ? ' 5px solid' : '' }}>MetaData</div>
-           
-            
-            </div>
-
-          
-       
-{
-  wmsLayer.current && stats
-  ? <> <p style= {{ color: '#5c5a5a'}}>{region} {sub_indicator} {year}</p>
-  <LulcBar  data={barchartData}/> </> 
-  : null
-}
-
-{
-  metadata ? <p className='metadata_text'> <b>  { wetland } </b> Velit cillum excepteur in exercitation eiusmod laborum laboris incididunt deserunt veniam proident dolor fugiat.
-  In ad culpa elit reprehenderit enim culpa enim laboris nulla qui adipisicing ex. Labore consectetur anim aliquip officia excepteur 
-  reprehenderit non ad laborum nulla ullamco consequat officia. Exercitation duis officia sint commodo et culpa duis id adipisicing.</p>
+     <div onClick={show_metadata} style={{ color: metadata === true ? 'steelblue' : '#5c5a5a', borderBottom:  metadata === true ? ' 5px solid' : '' }}>MetaData</div>
+    
+     
+     </div>
      : null
+
+ }
+ 
+ 
+  
+
+ 
+
+{
+wmsLayer.current && stats && open
+? <> <p style= {{ color: '#5c5a5a'}}>{region} {sub_indicator} {year}</p>
+<LulcBar  data={barchartData}/>
+<div className='close_chart'>
+<FaArrowCircleRight className='toggle cursor-pointer z-1000 bg-slate-600 '  onClick={ () => { setOpen(!open)}} />
+
+</div>
+
+ </> 
+
+
+: null
 }
-        
-         </div>
+
+{
+metadata ? <p className='metadata_text'> <b>  { wetland } </b> Velit cillum excepteur in exercitation eiusmod laborum laboris incididunt deserunt veniam proident dolor fugiat.
+In ad culpa elit reprehenderit enim culpa enim laboris nulla qui adipisicing ex. Labore consectetur anim aliquip officia excepteur 
+reprehenderit non ad laborum nulla ullamco consequat officia. Exercitation duis officia sint commodo et culpa duis id adipisicing.</p>
+: null
+}
+
+</div>
+
+</div>
+
           {/* access the current state of selected region */}
          {/* <div style={{position: 'absolute', top: '80vh', color: 'black', left: '80vw', zIndex: 600, fontWeight: 800}}>{wetlandSlice.selected_subindicator}</div> */}
 

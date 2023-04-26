@@ -8,7 +8,7 @@
 
 html {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-  background: #757474;
+  background: #817f7f;
   color: whitesmoke;
 }
 
@@ -77,8 +77,17 @@ form {
   left: 5vw;
   
   height: 75vh;
-  width: 70vw;
+  width: 90vw;
   z-index: 300 !important;
+}
+.map{
+  position: absolute;
+  top: 20vh;
+  left: 5vw;
+  
+  height: 75vh;
+  width: 70vw;
+  z-index: 200 !important;
 }
 #regions{
   position: absolute;
@@ -101,6 +110,7 @@ form {
   height: 75vh;
   background-color: rgb(255, 255, 255);
   width: 22vw;
+  z-index: 700;
 }
 
 #indicator{
@@ -302,12 +312,34 @@ form {
   width: 50px;
 }
 
-.toggle{
+/* .toggle{
   height: 200px;
   position: absolute;
-  left: 72vw;
-  top: 75vh;
-  z-index: 500;
+  left: 93vw;
+  top: 60vh;
+  z-index: 1000;
+} */
+
+#bar-chart{
+  height:250px !important;
+}
+
+.toggle_div{
+  position: absolute;
+  left: 93vw;
+  top: 70vh;
+  z-index: 400;
+  align-items: center
+
+}
+
+.close_chart{
+  position: absolute;
+  z-index: 1000;
+  height: 150px;
+  width: 150px;
+  /* background-color: #817f7f; */
+
 }
 
 @tailwind base;
